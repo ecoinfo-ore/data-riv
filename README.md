@@ -10,7 +10,7 @@ Semantic data producer from csv &amp; databases
     
     -owl          : Optional - Def : Ignored
  
-    -out_ontology : Optional - Def : Enable
+    -out_ontology : Optional - Def : Enable if -owl # NULL
    
     -batch        : Optional - Def : Disable
   
