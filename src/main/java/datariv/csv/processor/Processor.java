@@ -181,7 +181,7 @@ public class Processor {
                     
                System.out.println( "\n << Total Extacted Triples For Node [ " + 
                                    id + " ] = "                               + 
-                                   TOTAL_EXTRACTION  + ">> \n "            )  ;
+                                   TOTAL_EXTRACTION  + " >> \n "           )  ;
 
             }
     }
