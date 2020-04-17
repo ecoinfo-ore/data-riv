@@ -119,8 +119,7 @@ public class Processor {
                System.out.println("");
                    
                Map<Integer, List<String>>  resulQuery = runner.runCommandQuery( instanceQuery , false ) ;
-                          
-                            
+          
                System.out.println("===========================================");
                System.out.println("["+tripleMapping +"]");
                System.out.println("===========================================");
@@ -182,7 +181,6 @@ public class Processor {
                System.out.println( "\n << Total Extacted Triples For Node [ " + 
                                    id + " ] = "                               + 
                                    TOTAL_EXTRACTION  + " >> \n "           )  ;
-
             }
     }
      
