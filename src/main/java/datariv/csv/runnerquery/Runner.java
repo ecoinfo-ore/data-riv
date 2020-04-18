@@ -156,7 +156,6 @@ public class Runner {
     public static void runCmd( String commandQuery , 
                                String commandArgs  ) throws IOException           {
         
-        System.out.println(" Run Command : " + commandQuery + " " + commandArgs ) ;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream()          ;
         
         CommandLine commandline = buildCommandLine( commandQuery , commandArgs )  ;
