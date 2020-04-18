@@ -1,6 +1,7 @@
 
 package entry ;
 
+import java.util.Objects ;
 import java.io.IOException ;
 import org.apache.log4j.Level ;
 import datariv.csv.processor.InOut ;
@@ -17,22 +18,23 @@ public class Main {
     
     public static void main(String[] args) throws IOException, Exception {
         
-        final String EXTENSION = ".ttl"   ;
+        final String EXTENSION      = ".ttl"   ;
         
-        String   owl           = null     ;
-        String   obda          = null     ;
-        String   out           = null     ;
-        String   csvDirectory  = null     ;
-        String   csvDelemiter  = ";"      ; // Default CSV Separator 
-        Level    level         = null     ;
+        String   owl                = null     ;
+        String   obda               = null     ;
+        String   out                = null     ;
+        String   csvDelemiter       = ";"      ; // Default CSV Separator 
+        String   overrideKeyInOBDA  = null     ;
+        
+        Level    level              = null     ;
       
-        boolean  parallel      = false    ; // Parallel Disabled By Default 
+        boolean  parallel           = false    ; // Parallel Disabled By Default 
         
-        int      fragmentFile  = 0        ; // No Fragmentation File By Default
-        int      limPageSize   = 10_000   ; // DEFAULT LIMIT QUERY = 10_000
-        int      flushCount    = 10_0000  ; // FLUSH EACH 10_0000 Datas in Memory
+        int      fragmentFile       = 0        ; // No Fragmentation File By Default
+        int      limPageSize        = 10_000   ; // DEFAULT LIMIT QUERY = 10_000
+        int      flushCount         = 10_0000  ; // FLUSH EACH 10_0000 Datas in Memory
        
-        boolean  debug         = false    ;
+        boolean  debug              = false    ;
         
         
         for ( int i = 0 ; i < args.length ; i++ )  {
@@ -41,31 +43,33 @@ public class Main {
            
             switch ( token ) {
                 
-              case "-owl"            : owl          = args[i+1]  ;
+              case "-owl"            : owl               = args[i+1]  ;
                                        break ;
-              case "-obda"           : obda         = args[i+1]  ;
+              case "-obda"           : obda              = args[i+1]  ;
                                        break ;
-              case "-out"            : out          = args[i+1]  ;
+              case "-out"            : out               = args[i+1]  ;
                                        break ;
-              case "-csv_directory"  : csvDirectory = args[i+1]  ;  
+              case "-csv_delemiter"  : csvDelemiter      =  args[i+1] ;
                                        break ;
-              case "-csv_delemiter"  : csvDelemiter =  args[i+1] ;
+              case "-csv_directory"  : overrideKeyInOBDA =  args[i+1] ;
                                        break ;
-              case "-par"            : parallel     = true       ;
+              case "-par"            : parallel          = true       ;
                                        break ;
-              case "-debug"          : debug        = true       ;
+              case "-debug"          : debug             = true       ;
                                        break ;
-              case "-fragment"       : fragmentFile = validate ( Integer.parseInt ( args[i+1] ) ) ;
+              case "-fragment"       : fragmentFile      = validate ( Integer.parseInt ( args[i+1] ) ) ;
                                        break ;
-              case "-page_size"      : limPageSize  = validate ( Integer.parseInt ( args[i+1] ) ) ;
+              case "-page_size"      : limPageSize       = validate ( Integer.parseInt ( args[i+1] ) ) ;
                                        break ;
-              case "-fluch_count"    : flushCount   = validate ( Integer.parseInt ( args[i+1] ) ) ;
+              case "-fluch_count"    : flushCount        = validate ( Integer.parseInt ( args[i+1] ) ) ;
                                        break ;
-              case "-log_level"      : level        = checkLog ( args[i+1] )                      ;
+              case "-log_level"      : level             = checkLog ( args[i+1] )                      ;
                                        break ;
             }
         }
-               
+
+        Objects.requireNonNull( out, "Out Can't BE NULL OR EMPTY ! " ) ;
+        
         String outPath   = out                      ;
         String fileName  = InOut.getfileName( out ) ;
         String directory = InOut.getFolder(out )    ;
@@ -96,17 +100,18 @@ public class Main {
             
             String commandPath = Utils.extractCommandQuery() ;
 
-            Processor.Process( commandPath     ,
-                               obda            ,
-                               csvDelemiter    ,
-                               outPath         ,
-                               limPageSize     ,
-                               fragmentFile    , 
-                               flushCount      ,
-                               parallel     )  ;
+            Processor.Process( commandPath       ,
+                               obda              ,
+                               csvDelemiter      ,
+                               outPath           ,
+                               limPageSize       ,
+                               fragmentFile      , 
+                               flushCount        ,
+                               parallel          ,
+                               overrideKeyInOBDA ) ;
 
 
-           InOut.rm( commandPath )             ;
+           InOut.rm( commandPath )                 ;
            
         } else {
          

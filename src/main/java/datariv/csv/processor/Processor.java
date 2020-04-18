@@ -24,21 +24,22 @@ import static datariv.core.ObdaManager.loadOBDA ;
 
 public class Processor {
     
-    public static void Process( String  commandPath      ,
-                                String  obdaPath         ,
-                                String  csvDelemiter     ,
-                                String  outPathData      , 
-                                int     LIMIT_BATCH_SIZE ,
-                                int     FRAGMENT_FILE    ,
-                                int     FLUSH_COUNT      ,
-                                boolean parallel         ) throws Exception {
+    public static void Process( String  commandPath       ,
+                                String  obdaPath          ,
+                                String  csvDelemiter      ,
+                                String  outPathData       , 
+                                int     LIMIT_BATCH_SIZE  ,
+                                int     FRAGMENT_FILE     ,
+                                int     FLUSH_COUNT       ,
+                                boolean parallel          ,
+                                String  overrideKeyInOBDA ) throws Exception {
 
-       String  folder                   = InOut.getFolder               ( outPathData ) ;
-       String  fileNameWithExtension    = InOut.getfileName             ( outPathData ) ;
-       String  extension                = InOut.getFileExtension        ( fileNameWithExtension ) ; 
-       String  fileNameWithoutExtension = InOut.getFileWithoutExtension ( fileNameWithExtension ) ;
+       String  folder                   = InOut.getFolder                ( outPathData ) ;
+       String  fileNameWithExtension    = InOut.getfileName              ( outPathData ) ;
+       String  extension                = InOut.getFileExtension         ( fileNameWithExtension )  ; 
+       String  fileNameWithoutExtension = InOut.getFileWithoutExtension  ( fileNameWithExtension )  ;
 
-       List<MappingAdapter> mappings    = adaptMappings ( loadOBDA( obdaPath ) )                  ;
+       List<MappingAdapter> mappings    = adaptMappings ( loadOBDA( obdaPath, overrideKeyInOBDA ) ) ;
        
        if( parallel ) {
            

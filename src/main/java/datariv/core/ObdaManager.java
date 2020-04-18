@@ -22,29 +22,37 @@ import it.unibz.inf.ontop.injection.OntopSQLOWLAPIConfiguration ;
  */
 public class ObdaManager {
 
-    static final String CSV_KEY = "csv-directory" ;
+    static final String PATH = "path" ;
      
-    public static List<Mapping> loadOBDA(String obdaFile) throws Exception     {
+    public static List<Mapping> loadOBDA(String obdaFile , String overrideKeyInOBDA ) throws Exception    {
        
         OntopSQLOWLAPIConfiguration build = OntopSQLOWLAPIConfiguration.defaultBuilder()
-                                                                       .nativeOntopMappingFile(obdaFile)
+                                                                       .nativeOntopMappingFile( obdaFile  )
                                                                        .jdbcUrl("jdbc:postgresql:" )
                                                                        .jdbcDriver("org.postgresql.Driver")
                                                                        .jdbcUser("--")
                                                                        .jdbcPassword("--")
                                                                        .enableTestMode()
                                                                        .build();
-        String csvDirectory = build.loadPPMapping()
-                                   .get()
-                                   .getMetadata()
-                                   .getPrefixManager()
-                                   .getPrefixMap()
-                                   .asMultimap()
-                                   .asMap()
-                                   .get(CSV_KEY + ":" )
-                                   .stream()
-                                   .findFirst()
-                                   .orElse(null) ;
+        String abstractKeyInOBDA = overrideKeyInOBDA   ;
+        
+        if( overrideKeyInOBDA == null || overrideKeyInOBDA.isEmpty() )  {
+            
+            // Look for PATH into the obda file 
+            
+            abstractKeyInOBDA = build.loadPPMapping()
+                                     .get()
+                                     .getMetadata()
+                                     .getPrefixManager()
+                                     .getPrefixMap()
+                                     .asMultimap()
+                                     .asMap()
+                                     .get( PATH + ":" )
+                                     .stream()
+                                     .findFirst()
+                                     .orElse( null )  ;
+        }
+
         
         Optional<SQLPPMapping> loadPPMapping =
                 
@@ -66,10 +74,10 @@ public class ObdaManager {
             
             String          query        =  sqlTripleMap.getSourceQuery()
                                                         .getSQLQuery()
-                                                        .replace (CSV_KEY       , 
-                                                                   csvDirectory )     ;
+                                                        .replace ( PATH       , 
+                                                                   abstractKeyInOBDA ) ;
             
-            List<TargetAtom> targetAtoms = sqlTripleMap.getTargetAtoms().asList()     ;
+            List<TargetAtom> targetAtoms = sqlTripleMap.getTargetAtoms().asList()      ;
             
             String tripleMapping = targetAtoms.stream()
                                               .map((targetAtom) -> targetAtom.getSubstitutedTerms() )
@@ -146,7 +154,7 @@ public class ObdaManager {
             termType.toString().equalsIgnoreCase("URI"  ))          {
             
             if( ! object.startsWith("<") && ! object.endsWith(">")) {
-                object = "<" + object.split("\\(")[1].split("\\(")[0] + ">"       ;
+                object = "<" + object.split("\\(")[1].split("\\(")[0] + ">"         ;
             }
             
             for ( Variable variable :  variables ) {
@@ -157,6 +165,7 @@ public class ObdaManager {
         } else {
             
              // There's ONLY ZERO OR ONE VARIABLE
+             
             if( variables.size() == 1 ) {
                 
                 object = "\"{"   + variables.get(0).getName() +
