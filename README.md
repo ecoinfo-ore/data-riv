@@ -9,24 +9,21 @@ Semantic data producer from csvs &amp; databases
     -out           : Mandatory
     
     -owl           : Optional - Default : Ignored
- 
-    -out_ontology  : Optional - Default : Enable if -owl # NULL
    
     -batch         : Optional - Default : Disable ( Each Node is processed without LIMIT )
   
-    -debug         : Optional - Default : no_debug
-  
-    -connection    : Optional - Default : Ignored
+    -csv_directory : Optional - Default : Ignored
 
     -log_level     : Optional - Default : INFO
     
-    -page_size     : Optional - Default : 1000
+    -page_size     : Optional - Default : 10000 ( QUERY LIMIT )
 
-    -fragment      : Optional - Default : 0 ( No Fragementation : Put all Result Query in one file )
+    -fragment      : Optional - Default : 0     ( No Fragementation : Put all Result Query in one file )
  
     -flush_count   : Optional - Default : 1000
  
     -par           : Optional - Default : Enable ( Parallel extractions )
 
-    -csv_location  : Optional - Default : Ignored
+    -debug         : Optional - Default : no_debug
+ 
 
