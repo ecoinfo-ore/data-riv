@@ -21,7 +21,7 @@ import org.apache.commons.io.FileUtils ;
     public static void rm(String path ) throws IOException {
       System.out.println(" Remove Path : " + path ) ;
       if(new File(path).isDirectory()) {
-        FileUtils.deleteDirectory(new File(path)) ;
+        FileUtils.deleteDirectory(new File(path))   ;
       }
       else {
         new File(path).delete() ;
@@ -56,7 +56,11 @@ import org.apache.commons.io.FileUtils ;
     }
     
     public static String getFileWithoutExtension( String fileName ) {      
-      return fileName.replaceFirst("[.][^.]+$", "") ;
+      return fileName.replaceFirst("[.][^.]+$", "")  ;
+    }
+  
+    public static boolean isDirectory( String path ) {      
+      return new File(path).isDirectory()            ;
     }
     
  }
