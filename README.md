@@ -22,7 +22,7 @@ Semantic data producer from csv &amp; databases
     
     -pageSize      : Optional - Default : 1000
 
-    -fragment      : Optional - Default : -1 ( No Fragementation : Put all Result Query in one file )
+    -fragment      : Optional - Default : 0 ( No Fragementation : Put all Result Query in one file )
  
     -flushCount    : Optional - Default : 1000
  
