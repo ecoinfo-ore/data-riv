@@ -4,6 +4,7 @@ import java.util.Set ;
 import java.util.List ;
 import java.util.Optional ;
 import java.util.ArrayList ;
+import java.util.Collection ;
 import java.util.stream.Collectors ;
 import it.unibz.inf.ontop.model.term.Variable ;
 import it.unibz.inf.ontop.model.type.TermType ;
@@ -20,49 +21,41 @@ import it.unibz.inf.ontop.injection.OntopSQLOWLAPIConfiguration ;
  *
  * @author ryahiaoui
  */
+
 public class ObdaManager {
 
-    static final String PATH = "path" ;
+    static final String PATH = "PATH" ;
      
     public static List<Mapping> loadOBDA(String obdaFile , String overrideKeyInOBDA ) throws Exception    {
        
-        OntopSQLOWLAPIConfiguration build = OntopSQLOWLAPIConfiguration.defaultBuilder()
-                                                                       .nativeOntopMappingFile( obdaFile  )
-                                                                       .jdbcUrl("jdbc:postgresql:" )
-                                                                       .jdbcDriver("org.postgresql.Driver")
-                                                                       .jdbcUser("--")
-                                                                       .jdbcPassword("--")
-                                                                       .enableTestMode()
-                                                                       .build();
+        OntopSQLOWLAPIConfiguration owlApiConf = OntopSQLOWLAPIConfiguration.defaultBuilder()
+                                                                            .nativeOntopMappingFile( obdaFile  )
+                                                                            .jdbcUrl("jdbc:postgresql:" )
+                                                                            .jdbcDriver("org.postgresql.Driver")
+                                                                            .jdbcUser("--")
+                                                                            .jdbcPassword("--")
+                                                                            .enableTestMode()
+                                                                            .build();
         String abstractKeyInOBDA = overrideKeyInOBDA   ;
         
         if( overrideKeyInOBDA == null || overrideKeyInOBDA.isEmpty() )  {
             
-            // Look for PATH into the obda file 
-            
-            abstractKeyInOBDA = build.loadPPMapping()
-                                     .get()
-                                     .getMetadata()
-                                     .getPrefixManager()
-                                     .getPrefixMap()
-                                     .asMultimap()
-                                     .asMap()
-                                     .get( PATH + ":" )
-                                     .stream()
+            // Look for PATH into the obda file
+            Collection<String> paths = owlApiConf.loadPPMapping()
+                                                 .get()
+                                                 .getMetadata()
+                                                 .getPrefixManager()
+                                                 .getPrefixMap()
+                                                 .asMultimap()
+                                                 .asMap()
+                                                 .get( PATH + ":" ) ;
+            if( paths != null )
+            abstractKeyInOBDA = paths.stream()
                                      .findFirst()
-                                     .orElse( null )  ;
+                                     .orElse( null ) ;
         }
-
         
-        Optional<SQLPPMapping> loadPPMapping =
-                
-                OntopSQLOWLAPIConfiguration.defaultBuilder()
-                                           .nativeOntopMappingFile(obdaFile)
-                                           .jdbcUrl("jdbc:postgresql:" )
-                                           .jdbcUser("--")
-                                           .jdbcPassword("--")
-                                           .enableTestMode()
-                                           .build().loadPPMapping()                   ; 
+        Optional<SQLPPMapping> loadPPMapping = owlApiConf.loadPPMapping()             ; 
 
         List<Mapping> mappings = new ArrayList<>()                                    ; 
         
@@ -73,11 +66,14 @@ public class ObdaManager {
             String          idMap        =  sqlTripleMap.getId()                      ;
             
             String          query        =  sqlTripleMap.getSourceQuery()
-                                                        .getSQLQuery()
-                                                        .replace ( PATH       , 
-                                                                   abstractKeyInOBDA ) ;
+                                                        .getSQLQuery()                ;
             
-            List<TargetAtom> targetAtoms = sqlTripleMap.getTargetAtoms().asList()      ;
+            if( abstractKeyInOBDA != null )
+                
+                            query = query.replace ( "@" + PATH        , 
+                                                    abstractKeyInOBDA )               ;
+                                                        
+            List<TargetAtom> targetAtoms  =  sqlTripleMap.getTargetAtoms().asList()   ;
             
             String tripleMapping = targetAtoms.stream()
                                               .map((targetAtom) -> targetAtom.getSubstitutedTerms() )
