@@ -108,7 +108,7 @@ public class Utils {
      
     public static String extractCommandQuery() throws IOException {
        
-       System.out.print("Extract Q-Data Command... : " ) ;
+       System.out.print(" Extract Q-Data tool... : " ) ;
   
        String commandPath = "q-linux"      ;
        
