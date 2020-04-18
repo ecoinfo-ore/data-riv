@@ -8,7 +8,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <docker.pgsql.password>postgres2</docker.pgsql.password>
     </properties>
     
     <dependencies>
