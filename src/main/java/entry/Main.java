@@ -12,7 +12,7 @@ import datariv.owl.ntriple.OwlToNTripleConverter ;
  * @author ryahiaoui
  */
 
-public class MainCsv {
+public class Main {
     
     public static void main(String[] args) throws IOException, Exception {
         
