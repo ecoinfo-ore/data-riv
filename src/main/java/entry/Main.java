@@ -19,16 +19,16 @@ public class Main {
         
         final String EXTENSION = ".ttl"   ;
         
-        String   owl           = "/home/ryahiaoui/.local/share/Trash/files/ontop-matarializer/src/main/resources/mapping/ontology.owl"     ;
-        String   obda          = "/home/ryahiaoui/Téléchargements/JAXY_COBY/COBY-2828/coby_standard_bin/pipeline/SI/FORET/output/01_obda/5_mapping_CSV_LatentHeat.obda"     ;
-        String   out           = "/home/ryahiaoui/Téléchargements/TO_DELL/3/Ontop-materializer/v3/out/"     ;
+        String   owl           = null     ;
+        String   obda          = null     ;
+        String   out           = null     ;
         String   csvDirectory  = null     ;
         String   csvDelemiter  = ";"      ; // Default CSV Separator 
         Level    level         = null     ;
       
         boolean  parallel      = false    ; // Parallel Disabled By Default 
         
-        int      fragmentFile  = 0        ; // No Fragmentation File By Default 
+        int      fragmentFile  = 0        ; // No Fragmentation File By Default
         int      limPageSize   = 10_000   ; // DEFAULT LIMIT QUERY = 10_000
         int      flushCount    = 10_0000  ; // FLUSH EACH 10_0000 Datas in Memory
        
