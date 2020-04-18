@@ -1,5 +1,5 @@
 
-package datariv.csv.runnerquery ;
+package datariv.csv.querier ;
 
 import java.util.Map ;
 import java.util.List ;
@@ -12,19 +12,19 @@ import java.io.ByteArrayOutputStream ;
 import org.apache.commons.exec.CommandLine ;
 import org.apache.commons.exec.DefaultExecutor ;
 import org.apache.commons.exec.PumpStreamHandler ;
-import static datariv.csv.runnerquery.Utils.getExecutor ;
+import static datariv.csv.querier.Utils.getExecutor ;
 import org.apache.commons.exec.DefaultExecuteResultHandler ;
-import static datariv.csv.runnerquery.Utils.buildCommandLine ;
-import static datariv.csv.runnerquery.Utils.applyLimitOffsetParams ;
+import static datariv.csv.querier.Utils.buildCommandLine ;
+import static datariv.csv.querier.Utils.applyLimitOffsetParams ;
 
 /**
  *
  * @author ryahiaoui
  */
 
-public class Runner {
+public class Querier   {
     
-    final  static Logger           LOGGER =  Logger.getLogger(Runner.class) ;
+    final  static Logger           LOGGER =  Logger.getLogger(Querier.class) ;
    
     private final DefaultExecutor  executor             ;
    
@@ -41,7 +41,7 @@ public class Runner {
     private final Map<Integer, String > columnNames     ;
 
     
-    public Runner( String commandQuery, String originalQuery , String csvDelemiter ) throws IOException {
+    public Querier( String commandQuery, String originalQuery , String csvDelemiter ) throws IOException {
         
         this.executor      = getExecutor()   ;
         

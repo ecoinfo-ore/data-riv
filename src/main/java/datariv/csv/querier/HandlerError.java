@@ -1,5 +1,5 @@
 
-package datariv.csv.runnerquery ;
+package datariv.csv.querier ;
 
 import org.apache.log4j.Logger ;
 import org.apache.commons.exec.LogOutputStream ;

@@ -1,5 +1,5 @@
 
-package datariv.csv.runnerquery;
+package datariv.csv.querier ;
 
 import java.util.Map ;
 import java.util.List ;

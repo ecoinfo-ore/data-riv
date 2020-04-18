@@ -5,7 +5,7 @@ import java.util.Objects ;
 import java.io.IOException ;
 import org.apache.log4j.Level ;
 import datariv.csv.processor.InOut ;
-import datariv.csv.runnerquery.Utils ;
+import datariv.csv.querier.Utils ;
 import datariv.csv.processor.Processor ;
 import datariv.owl.ntriple.OwlToNTripleConverter ;
 

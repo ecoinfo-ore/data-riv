@@ -1,5 +1,5 @@
 
-package datariv.csv.runnerquery ;
+package datariv.csv.querier ;
 
 import java.io.File ;
 import java.util.Map ;
@@ -123,7 +123,7 @@ public class Utils {
        if( SystemUtils.IS_OS_LINUX )          {
 
           commandPath = "./" + commandPath    ;
-          Runner.runCmd( "chmod",
+          Querier.runCmd( "chmod",
                          "777 " + commandPath ) ;
        }
        

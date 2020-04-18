@@ -12,8 +12,8 @@ import java.util.logging.Level ;
 import java.util.logging.Logger ;
 import datariv.core.ObdaManager ;
 import java.util.stream.Collectors ;
-import datariv.csv.runnerquery.Utils ;
-import datariv.csv.runnerquery.Runner ;
+import datariv.csv.querier.Utils ;
+import datariv.csv.querier.Querier ;
 import it.unibz.inf.ontop.model.term.Variable ;
 import static datariv.core.ObdaManager.loadOBDA ;
 
@@ -104,7 +104,7 @@ public class Processor {
                    
                String outPath =  folder + "/" + fileNameWithoutExtension + "_" + id + extension   ; 
                    
-               Runner runner  = new Runner( commandPath , query , csvDelemiter )                  ;
+               Querier runner  = new Querier( commandPath , query , csvDelemiter )                  ;
                  
                mapping.initLimitOffsetAndOverrideParams( runner.getColumnsNameAsList(), LIMIT_BATCH_SIZE )  ;
                     
