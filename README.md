@@ -28,5 +28,5 @@ Semantic data producer from csv &amp; databases
  
     -par           : Optional - Default : Enable ( Parallel extractions )
 
-    -csv_locations : Optional - Default : Ignored
+    -csv_location  : Optional - Default : Ignored
 
