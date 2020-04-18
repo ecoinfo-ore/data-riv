@@ -8,13 +8,13 @@ oboe-characteristics:		http://ecoinformatics.org/oboe/oboe.1.0/oboe-characterist
 oboe-spatial:		http://ecoinformatics.org/oboe/oboe.1.0/oboe-spatial.owl#
 oboe-standards:		http://ecoinformatics.org/oboe/oboe.1.0/oboe-standards.owl#
 rdfs:		http://www.w3.org/2000/01/rdf-schema#
-csv-directory: /home/
+PATH: /home/user
 
 [MappingDeclaration] @collection [[
 
 mappingId	(1)
 target		:sample/measurement/variable/localName/{recording_group_id}/{session_id} a oboe-core:Measurement ; oboe-core:ofCharacteristic oboe-core:Name ; oboe-core:usesStandard :NamingStandard ; oboe-core:hasValue {created_ts}^^xsd:string , {session_id}^^xsd:integer . 
-source		SELECT  * FROM sample/data.csv data ; 
+source		SELECT  * FROM @PATH/sample/data.csv data ; 
 
 
 ]]
