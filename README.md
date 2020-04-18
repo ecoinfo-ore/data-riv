@@ -14,11 +14,11 @@ Semantic data producer from csvs &amp; databases
 
     -log_level     : Optional - Default : INFO
     
-    -page_size     : Optional - Default : 10000 ( QUERY LIMIT )
+    -page_size     : Optional - Default : 10_000 ( QUERY LIMIT )
 
-    -fragment      : Optional - Default : 0     ( No Fragmentation : Put all Result Query in one file )
+    -fragment      : Optional - Default : 0      ( No Fragmentation : Put all Result Query in one file )
  
-    -flush_count   : Optional - Default : 1000
+    -flush_count   : Optional - Default : 10_000
  
     -par           : Optional - Default : Boolean Disable ( Parallel extractions )
 
