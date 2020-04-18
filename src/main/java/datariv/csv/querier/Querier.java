@@ -84,8 +84,7 @@ public class Querier   {
                   
                   System.out.println( "\n *** ERROR  *** "         + 
                                       resultHandler.getException()
-                                                   .getMessage())  ;
-                  
+                                                   .getMessage())  ;                  
               }
               
               System.out.println(" Check LOG FILES \n" )           ;
@@ -185,3 +184,4 @@ public class Querier   {
     }
     
 }
+
