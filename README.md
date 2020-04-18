@@ -1,6 +1,6 @@
 # data-Riv
 
-Semantic data producer from csv &amp; databases 
+Semantic data producer from csvs &amp; databases 
 
 #### Args :
 
