@@ -20,11 +20,11 @@ Semantic data producer from csv &amp; databases
 
     -log_level     : Optional - Default : INFO
     
-    -pageSize      : Optional - Default : 1000
+    -page_size     : Optional - Default : 1000
 
     -fragment      : Optional - Default : 0 ( No Fragementation : Put all Result Query in one file )
  
-    -flushCount    : Optional - Default : 1000
+    -flush_count   : Optional - Default : 1000
  
     -par           : Optional - Default : Enable ( Parallel extractions )
 
