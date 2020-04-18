@@ -26,6 +26,6 @@ Semantic data producer from csv &amp; databases
  
     -flushCount   : Optional - Def : 1000
  
-
+    -par          : Optional - Default : Enable ( Parallel extractions )
 
 
