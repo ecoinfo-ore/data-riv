@@ -1,4 +1,4 @@
-# Data-riv
+# data-Riv
 
 Semantic data producer from csv &amp; databases 
 
