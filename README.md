@@ -4,28 +4,29 @@ Semantic data producer from csv &amp; databases
 
 #### Args :
 
-    -obda         : Mandatory
+    -obda          : Mandatory
 
-    -out          : Mandatory
+    -out           : Mandatory
     
-    -owl          : Optional - Def : Ignored
+    -owl           : Optional - Def : Ignored
  
-    -out_ontology : Optional - Def : Enable if -owl # NULL
+    -out_ontology  : Optional - Def : Enable if -owl # NULL
    
-    -batch        : Optional - Def : Disable
+    -batch         : Optional - Def : Disable ( Each Node is processed without LIMIT )
   
-    -debug        : Optional - Def : no_debug
+    -debug         : Optional - Def : no_debug
   
-    -connection   : Optional - Def : Ignored
+    -connection    : Optional - Def : Ignored
 
-    -log_level    : Optional - Def : INFO
+    -log_level     : Optional - Def : INFO
     
-    -pageSize     : Optional - Def : 1000
+    -pageSize      : Optional - Def : 1000
 
-    -fragment     : Optional - Def : -1 ( No Fragementation )
+    -fragment      : Optional - Def : -1 ( No Fragementation )
  
-    -flushCount   : Optional - Def : 1000
+    -flushCount    : Optional - Def : 1000
  
-    -par          : Optional - Default : Enable ( Parallel extractions )
+    -par           : Optional - Default : Enable ( Parallel extractions )
 
+    -csv_locations : Optional - Default : Empty
 
