@@ -1,0 +1,20 @@
+[PrefixDeclaration]
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+oboe-core:		http://ecoinformatics.org/oboe/oboe.1.0/oboe-core.owl#
+xsd:		http://www.w3.org/2001/XMLSchema#
+oboe-temporal:		http://ecoinformatics.org/oboe/oboe.1.0/oboe-temporal.owl#
+:		http://www.anaee-france.fr/ontology/anaee-france_ontology#
+oboe-characteristics:		http://ecoinformatics.org/oboe/oboe.1.0/oboe-characteristics.owl#
+oboe-spatial:		http://ecoinformatics.org/oboe/oboe.1.0/oboe-spatial.owl#
+oboe-standards:		http://ecoinformatics.org/oboe/oboe.1.0/oboe-standards.owl#
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+csv-directory: /home/
+
+[MappingDeclaration] @collection [[
+
+mappingId	(1)
+target		:sample/measurement/variable/localName/{recording_group_id}/{session_id} a oboe-core:Measurement ; oboe-core:ofCharacteristic oboe-core:Name ; oboe-core:usesStandard :NamingStandard ; oboe-core:hasValue {created_ts}^^xsd:string , {session_id}^^xsd:integer . 
+source		SELECT  * FROM sample/data.csv data ; 
+
+
+]]
