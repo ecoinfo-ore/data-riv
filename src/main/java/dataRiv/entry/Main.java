@@ -1,5 +1,5 @@
 
-package entry ;
+package dataRiv.entry ;
 
 import java.io.File ;
 import java.util.Objects ;
@@ -92,7 +92,7 @@ public class Main {
         }
 
         LOGGER.info( "                                             " ) ;
-        LOGGER.info( "+ Arguments :                                " ) ;
+        LOGGER.info( "+ Arguments            :                     " ) ;
         LOGGER.info( " - OBDA                : " + obda              ) ;
         LOGGER.info( " - OWL                 : " + owl               ) ;
         LOGGER.info( " - OUT                 : " + out               ) ;
@@ -104,7 +104,7 @@ public class Main {
         LOGGER.info( " - FLUSH_COUNT         : " + flushCount        ) ;
         LOGGER.info( " - LOG_LEVEL           : " + level             ) ;
         LOGGER.info( "                                             " ) ;
-      
+
         /** Convert OWL TO NTriples **/
          
         if ( owl != null ) {

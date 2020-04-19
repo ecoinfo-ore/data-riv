@@ -124,8 +124,8 @@ public class Processor {
                                                                   id                         )  ;
                          
                LOGGER.info ( "                                                      " ) ;
-               LOGGER.info ( " ColumnsName     : " +  runner.getColumnsName()         ) ;
-               LOGGER.info ( " variablesName   : " +  variablesName                   ) ;
+               LOGGER.info ( "ColumnsName      : " +  runner.getColumnsName()         ) ;
+               LOGGER.info ( "variablesName    : " +  variablesName                   ) ;
                LOGGER.info ( "                                                      " ) ;
                
                mapping.initLimitOffsetAndOverrideParams( runner.getColumnsNameAsList()  , 
@@ -136,12 +136,14 @@ public class Processor {
                     
                String instanceQuery           = mapping.applyOffset( currentPage ++   ) ;
                    
-               LOGGER.info ( " InstanceQuery   : "  +  instanceQuery                  ) ;
+               LOGGER.info ( "InstanceQuery    : "  +  instanceQuery                  ) ;
                LOGGER.info ( "                                                      " ) ;
                    
                Map<Integer, List<String>>  resulQuery = runner.runCommandQuery( instanceQuery ,
                                                                                 false       ) ;
-                        
+                
+               LOGGER.info("Query Result Size   : "  +  resulQuery.size()  )      ;
+               
                TOTAL_EXTRACTION = applyValuesAndWrite( resulQuery                 , 
                                                        tripleMapping              , 
                                                        variablesName              , 
@@ -150,7 +152,8 @@ public class Processor {
                                                        TOTAL_EXTRACTION           , 
                                                        FRAGMENT_FILE              ,
                                                        FLUSH_COUNT                , 
-                                                       extension                ) ;
+                                                       extension                  ,
+                                                       id                       ) ;
                         
                if( ! mapping.isAlreadyExistsLimitOffset() ) {
                         
@@ -162,11 +165,15 @@ public class Processor {
                      instanceQuery = mapping.applyOffset( offset )   ;
  
                      LOGGER.info ( "                                                " ) ;
-                     LOGGER.info ( " InstanceQuery   : "  +  instanceQuery            ) ;
+                     LOGGER.info ( "InstanceQuery    : "  +  instanceQuery            ) ;
                      LOGGER.info ( "                                                " ) ;
                            
                      resulQuery = runner.runCommandQuery( instanceQuery , false )       ;
-                            
+                        
+                     LOGGER.info("Query Result Size   : "  +  resulQuery.size()  )      ;
+                     
+                     if ( resulQuery.size() > 0 )
+                         
                      TOTAL_EXTRACTION = applyValuesAndWrite( resulQuery                 , 
                                                              tripleMapping              , 
                                                              variablesName              ,
@@ -175,29 +182,38 @@ public class Processor {
                                                              TOTAL_EXTRACTION           , 
                                                              FRAGMENT_FILE              , 
                                                              FLUSH_COUNT                , 
-                                                             extension                ) ;
+                                                             extension                  ,
+                                                             id                       ) ;
                     }
                }
-                    
-               LOGGER.info( " << Total Extacted Triples For Node [ " + 
-                              id + " ] = "                           + 
-                              TOTAL_EXTRACTION  + " >> "             )  ;
+                
+               LOGGER.info( "======================                 " ) ;
+               
+               LOGGER.info( " << Total Generated Triples For Node [ " + 
+                              id + " ] = "                            + 
+                              TOTAL_EXTRACTION  + " >> "              ) ;
+               
+               LOGGER.info( "======================                 " ) ;
             }
     }
      
-    private static double applyValuesAndWrite( Map<Integer, List<String>> resulQuery                    ,
-                                               String tripleMapping, Map<Integer, String> variablesName , 
-                                               String outPath,
-                                               int totalLinesPerTripleMapping      ,
-                                               double TOTAL_EXTRACTION  , 
-                                               int FRAGMENT_FILE , 
-                                               int FLUSH_COUNT , 
-                                               String extension ) throws IOException {
+    private static double applyValuesAndWrite( Map<Integer, List<String>> resulQuery                 ,
+                                               String                     tripleMapping              , 
+                                               Map<Integer, String>       variablesName              , 
+                                               String                     outPath                    ,
+                                               int                        totalLinesPerTripleMapping ,
+                                               double                     TOTAL_EXTRACTION           ,
+                                               int                        FRAGMENT_FILE              , 
+                                               int                        FLUSH_COUNT                , 
+                                               String                     extension                  ,
+                                               String                     id    ) throws IOException {
+        
+        LOGGER.info("Apply Result Query To TripleMapping & Write Data... " ) ;
         
         ArrayList<String> datasToWrite = new ArrayList<>() ;
                  
-        int     loopForFlush           =  0               ;
-                                                
+        int     loopForFlush           =  0                ;
+                                                 
         for (Map.Entry<Integer, List<String>> entry : resulQuery.entrySet()) {
             
             List<String> queryResultColumn = entry.getValue() ;
@@ -215,36 +231,47 @@ public class Processor {
                 TOTAL_EXTRACTION % FRAGMENT_FILE == 0  &&
                 ! datasToWrite.isEmpty()              ) {
                 
-                   writeInAppropriateFile( outPath          , 
-                                           datasToWrite     , 
-                                           extension        , 
-                                           TOTAL_EXTRACTION , 
-                                           FRAGMENT_FILE )  ;
-                   loopForFlush = 0                         ;
+                   writeInAppropriateFile( outPath                      , 
+                                           datasToWrite                 , 
+                                           extension                    , 
+                                           TOTAL_EXTRACTION             , 
+                                           FRAGMENT_FILE                ,
+                                           totalLinesPerTripleMapping ) ;
+                   loopForFlush = 0                                     ;
            }
             
             else if ( loopForFlush >= FLUSH_COUNT && ! datasToWrite.isEmpty() ) {
                     
-                writeInAppropriateFile( outPath          ,
-                                        datasToWrite     ,
-                                        extension        , 
-                                        TOTAL_EXTRACTION ,
-                                        FRAGMENT_FILE  ) ;
-                loopForFlush  = 0                        ;
+                writeInAppropriateFile( outPath                      ,
+                                        datasToWrite                 ,
+                                        extension                    , 
+                                        TOTAL_EXTRACTION             ,
+                                        FRAGMENT_FILE                ,
+                                        totalLinesPerTripleMapping ) ;
+                loopForFlush  = 0                                    ;
                     
            }
         }
         
         if( !datasToWrite.isEmpty() ) {
             
-                writeInAppropriateFile( outPath          ,
-                                        datasToWrite     ,
-                                        extension        , 
-                                        TOTAL_EXTRACTION ,
-                                        FRAGMENT_FILE  ) ;
-                loopForFlush  = 0                        ;
+                writeInAppropriateFile( outPath                      ,
+                                        datasToWrite                 ,
+                                        extension                    , 
+                                        TOTAL_EXTRACTION             ,
+                                        FRAGMENT_FILE                ,
+                                        totalLinesPerTripleMapping ) ;
+                loopForFlush  = 0                                    ;
         }
          
+        LOGGER.info( "====================       "       ) ;
+        
+        LOGGER.info( "++ Generated Triples for Node [ "    + 
+                     id + " ] : " + resulQuery.size()      +  
+                     " x "  +  totalLinesPerTripleMapping  +
+                     " = "  +  resulQuery.size()    *
+                     totalLinesPerTripleMapping          ) ;
+                     
         return TOTAL_EXTRACTION ;
     }
    
@@ -281,17 +308,22 @@ public class Processor {
                                                 List<String> datasToWrite    ,
                                                 String       extension       ,
                                                 double       totalExtraction ,
-                                                int          fragmentFile    ) {
+                                                int          fragmentFile    ,
+                                                int          totalLinesPerTripleMapping ) {
         try {
              String out = getNextFile( outPath   , 
                                        extension , 
                                        ( int ) ( fragmentFile == 0 ? 0 : 
                                                  totalExtraction/fragmentFile ) ) ;
             
-             InOut.writeTextFile ( out , datasToWrite )  ;
-             datasToWrite.clear ()                       ;
+             LOGGER.info ( "Write Triples into  : "  +  out  +  " - Size [ "   + 
+                           datasToWrite.size() * totalLinesPerTripleMapping + 
+                           " ] " ) ;
+             
+             InOut.writeTextFile ( out , datasToWrite                  ) ;
+             datasToWrite.clear ()                                       ;
         } catch (IOException ex) {
-            LOGGER.error(ex.getMessage(), ex ) ;
+            LOGGER.error( ex.getMessage(), ex ) ;
         }
     }
    

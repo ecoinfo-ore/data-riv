@@ -66,7 +66,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>entry.Main</mainClass>
+                            <mainClass>dataRiv.entry.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
