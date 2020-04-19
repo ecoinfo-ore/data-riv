@@ -14,7 +14,7 @@ Semantic data producer from csvs &amp; databases
     
     -csv_separator : Optional - Default : ";"
 
-    -log_level     : Optional - Default : WARN
+    -log_level     : Optional - Default : INFO   ( WARN, TRACE, OFF, INFO, FATAL, ERROR, DEBU, ALL )
     
     -page_size     : Optional - Default : 10_000 ( QUERY LIMIT )
 
