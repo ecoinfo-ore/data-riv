@@ -97,7 +97,7 @@ public class Main {
             
             try {
                 
-                LOGGER.info("OWL Convertion.. " )                                                        ;
+                LOGGER.info("OWL Conversion... " )                                                       ;
                 String ontoNameWithExtension    = InOut.getfileName(owl )                                ;
                 String ontoNameWithoutExtension = InOut.getFileWithoutExtension( ontoNameWithExtension ) ;
                 OwlToNTriplesConverter.convert( owl , directory                            +

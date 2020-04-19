@@ -100,10 +100,16 @@ public class Processor {
                LOGGER.info ( "Process Node : " + mapping.getId() + " ... " ) ;
                
                LOGGER.info ( "                                           " ) ;
-               LOGGER.info ( " - id             = "  +  id                 ) ;
-               LOGGER.info ( " - query          = "  +  query              ) ;
-               LOGGER.info ( " - tripleMapping  = "                        ) ;
-               LOGGER.info ( "   " + tripleMapping                         ) ;
+               LOGGER.info ( " - id            : "  +  id                  ) ;
+               LOGGER.info ( " - query         : "  +  query               ) ;
+               
+               LOGGER.info ( " - tripleMapping : "  + 
+                                 tripleMapping.substring( 0, 90 ) + " ... ") ;
+               
+               LOGGER.info ( " *** Use [ Debug Mode ] to see "    +
+                             " the Complete Generated TripleMapping  *** " ) ;
+               
+               LOGGER.debug( "   " + tripleMapping                         ) ;
                LOGGER.info ( "                                           " ) ;
                LOGGER.info ( "VariablesMapping : " + mapping.getVariablesMapping() ) ;
                
@@ -118,8 +124,8 @@ public class Processor {
                                                                   id                         )  ;
                          
                LOGGER.info ( "                                                      " ) ;
-               LOGGER.info ( " ColumnsName      : " + runner.getColumnsName()         ) ;
-               LOGGER.info ( " variablesName    : " + variablesName                   ) ;
+               LOGGER.info ( " ColumnsName     : " +  runner.getColumnsName()         ) ;
+               LOGGER.info ( " variablesName   : " +  variablesName                   ) ;
                LOGGER.info ( "                                                      " ) ;
                
                mapping.initLimitOffsetAndOverrideParams( runner.getColumnsNameAsList()  , 
@@ -128,9 +134,9 @@ public class Processor {
                 
                int totalLinesPerTripleMapping = mapping.getTotalLinesPerTripleMapping() ;
                     
-               String instanceQuery           = mapping.applyOffset( currentPage ++ )   ;
+               String instanceQuery           = mapping.applyOffset( currentPage ++   ) ;
                    
-               LOGGER.info ( " InstanceQuery : "  +  instanceQuery  )                   ;
+               LOGGER.info ( " InstanceQuery   : "  +  instanceQuery                  ) ;
                LOGGER.info ( "                                                      " ) ;
                    
                Map<Integer, List<String>>  resulQuery = runner.runCommandQuery( instanceQuery ,
@@ -156,7 +162,7 @@ public class Processor {
                      instanceQuery = mapping.applyOffset( offset )   ;
  
                      LOGGER.info ( "                                                " ) ;
-                     LOGGER.info ( " InstanceQuery : "  +  instanceQuery  )             ;
+                     LOGGER.info ( " InstanceQuery   : "  +  instanceQuery            ) ;
                      LOGGER.info ( "                                                " ) ;
                            
                      resulQuery = runner.runCommandQuery( instanceQuery , false )       ;
