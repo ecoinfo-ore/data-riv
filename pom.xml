@@ -75,7 +75,7 @@
                 </configuration>
             </plugin>
             
-<!--            <plugin>
+            <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                 <executions>
@@ -86,7 +86,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
       
         </plugins>
         
