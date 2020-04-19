@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger ;
 import dataRiv.csv.processor.Processor ;
 import org.apache.logging.log4j.LogManager ;
 import dataRiv.owl.ntriples.OwlToNTriplesConverter ;
+import org.apache.logging.log4j.core.config.Configurator;
 
 /**
  *
@@ -73,15 +74,20 @@ public class Main {
             }
         }
  
-        Objects.requireNonNull ( out, "Out Can't BE NULL OR EMPTY !  "   ) ;
+        System.out.println("Set LOG Level to   : " + level.name() + "\n ")  ;
+       
+        Configurator.setRootLevel( level )                                  ;
+        Configurator.setAllLevels( "datariv_configuration", level )         ;
+        
+        Objects.requireNonNull ( out, "Out Can't BE NULL OR EMPTY !  "    ) ;
         
         String outPath   =  out                       ;
         String fileName  =  InOut.getfileName ( out ) ;
         String directory =  InOut.getFolder   ( out ) ;
         
         if ( ! InOut.isDirectory( out ) ) {
-          if ( ! fileName.endsWith ( EXTENSION ) ) fileName += EXTENSION   ;
-          outPath = directory  +  File.separator + fileName                ; 
+          if ( ! fileName.endsWith ( EXTENSION ) ) fileName += EXTENSION    ;
+          outPath = directory  +  File.separator + fileName                 ; 
         } else {
           directory = outPath.endsWith( File.separator ) ? 
                       outPath.substring( 0, outPath.length() - 1 )  : 
@@ -164,25 +170,20 @@ public class Main {
         }
     }
     
-    private static Level checkLog( String level )        {
-     
-        try {
-             return  Level.toLevel(level.toUpperCase() ) ;
-        } catch( Exception ex )  {
-            LOGGER.warn(" Error : The Level "  +
-                        " [" + level           +
-                        "] deosn't exists."  ) ;
-            LOGGER.info(" Retained LEVEL : OFF       " ) ;
-            return Level.OFF                             ;
-        }
+    private static Level checkLog( String level )           {
+
+       Level toLevel = Level.toLevel( level.toUpperCase() ) ;
+       System.out.println( "\nRetained LOG LEVEL : "        + 
+                           toLevel.name()                 ) ;
+       return toLevel                                       ;
     }
     
-     private static int validate ( int value ) {
+    private static int validate ( int value )               {
        
-        if( value < 0 ) {
-           LOGGER.error(" Values can't be Negatif !! " ) ;
-           LOGGER.error( "                           " ) ;
-           System.exit ( 0 )                             ;
+        if( value < 0 )   {
+           LOGGER.error(" Values can't be Negatif !! "   )  ;
+           LOGGER.error( "                           "   )  ;
+           System.exit ( 0 )                                ;
         }
         return value ;
     }
