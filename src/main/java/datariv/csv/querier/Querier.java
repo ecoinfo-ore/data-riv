@@ -6,15 +6,16 @@ import java.util.List ;
 import java.util.HashMap ;
 import java.util.ArrayList ;
 import java.io.IOException ;
-import org.apache.log4j.Logger ;
 import java.util.stream.Stream ;
 import java.io.ByteArrayOutputStream ;
+import org.apache.logging.log4j.Logger ;
+import org.apache.logging.log4j.LogManager ;
 import org.apache.commons.exec.CommandLine ;
 import org.apache.commons.exec.DefaultExecutor ;
 import org.apache.commons.exec.PumpStreamHandler ;
 import static datariv.csv.querier.Utils.getExecutor ;
-import org.apache.commons.exec.DefaultExecuteResultHandler ;
 import static datariv.csv.querier.Utils.buildCommandLine ;
+import org.apache.commons.exec.DefaultExecuteResultHandler ;
 import static datariv.csv.querier.Utils.applyLimitOffsetParams ;
 
 /**
@@ -24,24 +25,24 @@ import static datariv.csv.querier.Utils.applyLimitOffsetParams ;
 
 public class Querier   {
     
-    final  static Logger           LOGGER =  Logger.getLogger(Querier.class) ;
+    final  static Logger                LOGGER =  LogManager.getLogger( Querier.class.getName()) ;
    
-    private final DefaultExecutor  executor             ;
+    private final DefaultExecutor       executor             ;
    
-    private final Handler          resultQueryHandler   ;
+    private final Handler               resultQueryHandler   ;
     
-    private final String           commandQuery         ;
+    private final String                commandQuery         ;
     
-    int                            columnCounter    = 0 ;
-    
-    private final String           originalQuery        ;
+    int                                 columnCounter    = 0 ;
+
+    private final String                originalQuery        ;
    
-    private final String           csvDelemiter         ;
+    private final String                csvSeparator         ;
     
-    private final Map<Integer, String > columnNames     ;
+    private final Map<Integer, String > columnNames          ;
 
     
-    public Querier( String commandQuery, String originalQuery , String csvDelemiter ) throws IOException {
+    public Querier( String commandQuery, String originalQuery , String csvSeparator ) throws IOException {
         
         this.executor      = getExecutor()   ;
         
@@ -49,21 +50,21 @@ public class Querier   {
 
         this.originalQuery = originalQuery   ;
         
-        this.csvDelemiter  = csvDelemiter    ;
+        this.csvSeparator  = csvSeparator    ;
         
         this.columnNames   = extractColumnsName( commandQuery  ,
                                                  originalQuery , 
-                                                 csvDelemiter  ) ;
+                                                 csvSeparator  ) ;
         
         this.resultQueryHandler = configHandlerForQueryExecutor( executor     , 
-                                                                 csvDelemiter ) ;
+                                                                 csvSeparator ) ;
     }
     
     public Map<Integer, List<String>> runCommandQuery( String argCommandQuery , boolean async  ) throws Exception {
      
       resultQueryHandler.clearLogsAndInit()   ;
         
-      String cmdQuery = " -H --delimiter \"" + csvDelemiter + "\"  \""  +
+      String cmdQuery = " -H --delimiter \"" + csvSeparator + "\"  \""  +
                         argCommandQuery    + "\""                       ;
        
       CommandLine cmdLine = buildCommandLine( commandQuery , cmdQuery ) ;
@@ -82,12 +83,10 @@ public class Querier   {
 
               if( resultHandler.getException() != null )           {
                   
-                  System.out.println( "\n *** ERROR  *** "         + 
-                                      resultHandler.getException()
-                                                   .getMessage())  ;                  
+                  LOGGER.error( " *** ERROR  *** "           + 
+                                resultHandler.getException()
+                                             .getMessage())  ;
               }
-              
-              System.out.println(" Check LOG FILES \n" )           ;
           }
           
           return null ;
@@ -103,8 +102,8 @@ public class Querier   {
     private static Handler configHandlerForQueryExecutor( DefaultExecutor executor       , 
                                                           String          csvDelemiter ) {
         
-       Handler            outReshANDLER =   new Handler( LOGGER, true , csvDelemiter )   ;
-       HandlerError       err           =   new HandlerError(LOGGER, true         )      ;
+       Handler            outReshANDLER =   new Handler     ( csvDelemiter )   ;
+       HandlerError       err           =   new HandlerError( )                ;
       
        PumpStreamHandler  pp            =   new PumpStreamHandler( outReshANDLER         , 
                                                                    err                   ,
@@ -115,9 +114,9 @@ public class Querier   {
     
     private Map<Integer, String > extractColumnsName( String commandQuery  , 
                                                       String originalQuery ,
-                                                      String csvDelemiter  ) throws IOException {
+                                                      String csvSeparator  ) throws IOException {
         
-        String query = buildQueryColumnsNames( originalQuery, csvDelemiter )  ;
+        String query = buildQueryColumnsNames( originalQuery, csvSeparator )  ;
         
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream()      ;
         
@@ -128,12 +127,12 @@ public class Querier   {
         
         exec.setStreamHandler(streamHandler) ;
         
-        exec.execute(commandline)            ;
+        exec.execute( commandline )          ;
         
         String   line                  = outputStream.toString()
                                                      .replace("\n", "" ) ;
         
-        String[] queryResultLine       = line.split(csvDelemiter )       ;
+        String[] queryResultLine       = line.split(csvSeparator )       ;
       
         Map<Integer, String > colNames = new HashMap<>()                 ;
         
@@ -144,30 +143,30 @@ public class Querier   {
         return colNames ;
     }
 
-    private String buildQueryColumnsNames(String query , String csvDelemiter )    {
+    private String buildQueryColumnsNames(String query , String csvDelemiter )   {
         
-        String QueryWithLimit_0_Offset_0 = applyLimitOffsetParams ( query , 0 )   ;
+        String QueryWithLimit_0_Offset_0 = applyLimitOffsetParams ( query , 0 )  ;
         
         return " -O -H --delimiter \""    + csvDelemiter + "\"  \"" +
                QueryWithLimit_0_Offset_0  + "\""                    ;
     }
     
     public static void runCmd( String commandQuery , 
-                               String commandArgs  ) throws IOException           {
+                               String commandArgs  ) throws IOException          {
         
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()          ;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()         ;
         
-        CommandLine commandline = buildCommandLine( commandQuery , commandArgs )  ;
-        DefaultExecutor exec    = new DefaultExecutor()                           ;
+        CommandLine commandline = buildCommandLine( commandQuery , commandArgs ) ;
+        DefaultExecutor exec    = new DefaultExecutor()                          ;
         
-        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream)     ;
+        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream)    ;
         
         exec.setStreamHandler(streamHandler)          ;
         exec.execute(commandline)                     ;
         
         String line = outputStream.toString()         ;
-        if( line != null && ! line.isEmpty()  )
-        System.out.println( "Cmd Output : " + line )  ;
+        if( line != null && !  line.isEmpty()  )
+        LOGGER.info( "Cmd Output : " + line )  ;
     }
     
     public Map<Integer, String> getColumnsName()  {
@@ -184,4 +183,3 @@ public class Querier   {
     }
     
 }
-

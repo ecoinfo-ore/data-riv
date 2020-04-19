@@ -6,6 +6,8 @@ import java.util.List ;
 import datariv.core.Mapping ;
 import java.util.regex.Matcher ;
 import java.util.regex.Pattern ;
+import org.apache.logging.log4j.Logger ;
+import org.apache.logging.log4j.LogManager ;
 import static java.text.MessageFormat.format ;
 import it.unibz.inf.ontop.model.term.Variable ;
 
@@ -27,6 +29,8 @@ public class MappingAdapter             {
     private boolean  alreadyExistsLimitOffset = false ;
    
     private final int TOTAL_LINE_PER_TRIPLE_MAPPING   ;
+    
+    private static final Logger LOGGER = LogManager.getLogger( MappingAdapter.class.getName() ) ;
     
     
     public MappingAdapter( Mapping mapping ) {
@@ -57,11 +61,14 @@ public class MappingAdapter             {
                                 OFFSET.toString() )
                                       .replaceAll("<>", "'")  ;
         
+        LOGGER.debug ( " OFFSET : "     + this.OFFSET      )  ;
+        LOGGER.debug ( " InstanceQuery" + instanceQuery    )  ;
+        
         return instanceQuery ;
 
     }
     
-    public void initLimitOffsetAndOverrideParams ( List<String> columns , int LIMIT  ) {
+    public void initLimitOffsetAndOverrideParams ( List<String> columns , int LIMIT ) {
       
         if( LIMIT >= 0 ) {
             
@@ -121,7 +128,9 @@ public class MappingAdapter             {
                                                          " "    ) 
                                   + offset                      ;
             }
-              
+            
+            LOGGER.debug( " TemplateQuery : " + templateQuery ) ;
+            
             templateQuery = templateQuery.replaceAll(" +" , " " )
                                          .trim()     + " "      ;
       }

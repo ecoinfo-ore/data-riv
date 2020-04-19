@@ -7,9 +7,11 @@
  import java.io.IOException ;
  import java.nio.file.Files ;
  import java.nio.file.Paths ;
+import org.apache.logging.log4j.Logger ;
 import org.apache.commons.io.FileUtils ;
  import java.nio.file.StandardOpenOption ;
  import java.nio.charset.StandardCharsets ;
+import org.apache.logging.log4j.LogManager ;
 
  /**
  *
@@ -18,10 +20,13 @@ import org.apache.commons.io.FileUtils ;
 
  public class InOut {
 
+    private static final Logger LOGGER = LogManager.getLogger( InOut.class.getName() ) ;
+    
     public static void rm(String path ) throws IOException {
-      System.out.println(" Remove Path : " + path ) ;
-      if(new File(path).isDirectory()) {
-        FileUtils.deleteDirectory(new File(path))   ;
+        
+      LOGGER.info( " Remove File : Path - " + path ) ;
+      if(new File(path).isDirectory())    {
+        FileUtils.deleteDirectory(new File( path ))  ;
       }
       else {
         new File(path).delete() ;
@@ -29,16 +34,20 @@ import org.apache.commons.io.FileUtils ;
     }
 
     public static void writeTextFile(  String fileName, List<String> strLines ) throws IOException {
-        
-      Path path = Paths.get(fileName)         ;
-      Files.write(  path                      , 
-                    strLines                  ,
-                    StandardCharsets.UTF_8    ,
-                    StandardOpenOption.CREATE , 
-                    StandardOpenOption.APPEND ) ;
+      
+      LOGGER.debug(  " WriteTextFile : "       + 
+                     fileName  + " - Lines : " + 
+                     strLines  )               ;
+      
+      Path path = Paths.get(fileName)          ;
+      Files.write(  path                       , 
+                    strLines                   ,
+                    StandardCharsets.UTF_8     ,
+                    StandardOpenOption.CREATE  , 
+                    StandardOpenOption.APPEND  ) ;
     }
     
-    public static String getFolder(String outputFile ) {
+    public static String getFolder( String outputFile ) {
       Path path = Paths.get(outputFile)  ;
       return path.getParent().toString() ;
     }

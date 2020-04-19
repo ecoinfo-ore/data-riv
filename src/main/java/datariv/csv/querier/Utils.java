@@ -13,7 +13,9 @@ import java.util.stream.Stream ;
 import java.util.regex.Matcher ;
 import java.util.regex.Pattern ;
 import java.io.FileOutputStream ;
+import org.apache.logging.log4j.Logger ;
 import org.apache.commons.exec.CommandLine ;
+import org.apache.logging.log4j.LogManager ;
 import org.apache.commons.lang3.SystemUtils ;
 import org.apache.commons.exec.DefaultExecutor ;
 
@@ -23,19 +25,21 @@ import org.apache.commons.exec.DefaultExecutor ;
  */
 public class Utils {
     
-    final static Pattern REGEX   = Pattern.compile("\'[^']*'|\"[^\"]*\"|( )") ;
-    final static String  SPLITER = "@#*_SplitHere_*#@"                        ;
+    final  static Logger LOGGER  = LogManager.getLogger( Utils.class.getName()) ;
+   
+    final static Pattern REGEX   = Pattern.compile("\'[^']*'|\"[^\"]*\"|( )")   ;
+    final static String  SPLITER = "@#*_SplitHere_*#@"                          ;
 
     public static DefaultExecutor getExecutor()        {
         
       DefaultExecutor executor = new DefaultExecutor() ;
       executor.setExitValue(0)                         ;     
-      return executor ;
+      return executor                                  ;
     }
      
-    public static CommandLine buildCommandLine( String command, String argCmd )     {
+    public static CommandLine buildCommandLine( String command, String argCmd ) {
         
-       System.out.println(" \n Running Command : " + command + " " +  argCmd + "\n" ) ;
+      LOGGER.info( "Running Command  : " + command + " " +  argCmd ) ;
       
       /**  Splitting on SPACE  outside DOUBLE QUOTES  **/
       String[] cmdArgs     = cleanAndParseCommand( argCmd ) ; 
@@ -44,10 +48,10 @@ public class Utils {
 
       Stream.of( cmdArgs )
             .forEach( arg ->  {
-                                if( ! arg.trim().isEmpty())
-                                cmdLine.addArgument( arg.trim() , 
-                                                     false )    ;
-      }) ;
+                       if( ! arg.trim().isEmpty())
+                           cmdLine.addArgument( arg.trim() , 
+                                                false )    ;
+      } ) ;
       
       return cmdLine ;
     }
@@ -70,11 +74,9 @@ public class Utils {
 
             p = Pattern.compile( " OFFSET +.?\\d+"          , 
                                  Pattern.CASE_INSENSITIVE ) ;
-            m = p.matcher( templateQuery ) ;
+            m = p.matcher( templateQuery )                  ;
 
-            if(m.find()) {
-                 offset = m.group() ;
-            }
+            if(m.find()) {  offset  =  m.group()  ;         }
   
             if( limit.isEmpty() )  {
                templateQuery    += " LIMIT " + LIMIT + " " ;
@@ -83,18 +85,21 @@ public class Utils {
                templateQuery =  templateQuery.replace( limit, " LIMIT 0 " )  ;
             }
             
-            if( offset.isEmpty() ) {
+            if( offset.isEmpty() )            {
                 templateQuery += " OFFSET 0 " ;
             }
             else {
-                templateQuery = templateQuery.replace( offset, " " )  + " OFFSET 0 " ;
+                templateQuery = templateQuery.replace( offset , " " )  + 
+                                " OFFSET 0 "                           ;
             }
             
             templateQuery = templateQuery.replaceAll(" +", " " )
-                                         .trim() + " "         ;
+                                         .trim()  +  " "       ;
       }
-        
-      return templateQuery ;
+       
+      LOGGER.debug( " templateQuery : "  + templateQuery  )    ;
+      
+      return templateQuery                                     ;
     }
      
     public static <K, V> Stream<K> getKeyByValue(Map<K, V> map, V value) {
@@ -107,24 +112,20 @@ public class Utils {
     }
      
     public static String extractCommandQuery() throws IOException {
-       
-       System.out.print(" \n Extract Q-Data tool... : " ) ;
-  
+      
        String commandPath = "q-linux"      ;
        
        if( SystemUtils.IS_OS_WINDOWS )     {
            commandPath = "q-windows.exe"   ;
        }
        
-       System.out.println( commandPath )   ;
-       
-       extractExec( "q", commandPath , "." )  ;
+       extractExec( "q", commandPath , "." )   ;
       
-       if( SystemUtils.IS_OS_LINUX )          {
+       if( SystemUtils.IS_OS_LINUX )           {
 
-          commandPath = "./" + commandPath    ;
+          commandPath = "./" + commandPath     ;
           Querier.runCmd( "chmod",
-                         "777 " + commandPath ) ;
+                          "777 " + commandPath ) ;
        }
        
       return commandPath  ;
@@ -167,17 +168,20 @@ public class Utils {
     }
     
     private static String cleanQuery( String query ) {
-      return query.endsWith(";")                    ? 
+        
+      return query.endsWith(";")        ? 
              query.replaceAll(" +" , " ")
                   .replaceAll("\t+", " ")
                   .substring( 0, query.length()-1 )
                   .trim()  :
              query.replaceAll(" +", " ") 
-                   .replaceAll("\t+", " ").trim()   ;
+                  .replaceAll("\t+", " ").trim()   ;
     }
     
     private static void extractExec( String path , String prg , String dest ) throws IOException {
         
+        LOGGER.info( "Extract Q-Data tool... : " + prg ) ;
+       
         OutputStream os ;
         
         try (InputStream is = Utils.class.getClassLoader()

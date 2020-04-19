@@ -8,12 +8,11 @@ import java.util.HashMap ;
 import java.io.IOException ;
 import java.util.ArrayList ;
 import datariv.core.Mapping ;
-import java.util.logging.Level ;
-import java.util.logging.Logger ;
-import datariv.core.ObdaManager ;
-import java.util.stream.Collectors ;
 import datariv.csv.querier.Utils ;
 import datariv.csv.querier.Querier ;
+import java.util.stream.Collectors ;
+import org.apache.logging.log4j.Logger ;
+import org.apache.logging.log4j.LogManager ;
 import it.unibz.inf.ontop.model.term.Variable ;
 import static datariv.core.ObdaManager.loadOBDA ;
 
@@ -24,9 +23,11 @@ import static datariv.core.ObdaManager.loadOBDA ;
 
 public class Processor {
     
+    private static final Logger LOGGER = LogManager.getLogger( Processor.class.getName() ) ;
+    
     public static void Process( String  commandPath       ,
                                 String  obdaPath          ,
-                                String  csvDelemiter      ,
+                                String  csvSeparator      ,
                                 String  outPathData       , 
                                 int     LIMIT_BATCH_SIZE  ,
                                 int     FRAGMENT_FILE     ,
@@ -48,16 +49,15 @@ public class Processor {
                    try {
                        Processor.processMapping( mapping                  ,
                                                  commandPath              , 
-                                                 csvDelemiter             ,
+                                                 csvSeparator             ,
                                                  LIMIT_BATCH_SIZE         ,
                                                  FRAGMENT_FILE            , 
                                                  FLUSH_COUNT              , 
                                                  folder                   , 
                                                  fileNameWithoutExtension , 
                                                  extension                ) ;
-                   } catch (Exception ex) {
-                       Logger.getLogger(Processor.class.getName())
-                             .log(Level.SEVERE, null, ex )       ;
+                   } catch ( Exception ex )    {
+                      LOGGER.error( ex.getMessage() , ex ) ;
                    }
                }) ;  
        } else {
@@ -66,7 +66,7 @@ public class Processor {
                  
                processMapping( mapping                  , 
                                commandPath              ,
-                               csvDelemiter             ,
+                               csvSeparator             ,
                                LIMIT_BATCH_SIZE         ,
                                FRAGMENT_FILE            ,
                                FLUSH_COUNT              , 
@@ -79,7 +79,7 @@ public class Processor {
     
     private static void processMapping( MappingAdapter mapping                  ,
                                         String         commandPath              ,
-                                        String         csvDelemiter             , 
+                                        String         csvSeparator             , 
                                         int            LIMIT_BATCH_SIZE         ,
                                         int            FRAGMENT_FILE            ,
                                         int            FLUSH_COUNT              ,
@@ -92,55 +92,49 @@ public class Processor {
 
            if( LIMIT_BATCH_SIZE >= 0 ) {
                     
-               String  id              = mapping.getId()               ;
-               String  query           = mapping.getQuery()            ;
-               String  tripleMapping   = mapping.getTripleMapping()    ;
+               String  id              = mapping.getId()                     ;
+               String  query           = mapping.getQuery()                  ;
+               String  tripleMapping   = mapping.getTripleMapping()          ;
                    
-               System.out.println("id             = " + id             ) ;
-               System.out.println("query          = " + query          ) ;
-               System.out.println("tripleMapping  = " + tripleMapping  ) ;
+               LOGGER.info ( "                                           " ) ;
+               LOGGER.info ( "Process Node : " + mapping.getId() + " ... " ) ;
+               
+               LOGGER.info ( "                                           " ) ;
+               LOGGER.info ( " - id             = "  +  id                 ) ;
+               LOGGER.info ( " - query          = "  +  query              ) ;
+               LOGGER.info ( " - tripleMapping  = "                        ) ;
+               LOGGER.info ( "   " + tripleMapping                         ) ;
+               LOGGER.info ( "                                           " ) ;
+               LOGGER.info ( "VariablesMapping : " + mapping.getVariablesMapping() ) ;
+               
+               String outPath =  folder + "/" + fileNameWithoutExtension + "_" + id + extension ; 
+                   
+               Querier runner  = new Querier( commandPath , query , csvSeparator    )           ;
                  
-               System.out.println(" Process Node : " + mapping.getId() + " ..." ) ;
-                   
-               String outPath =  folder + "/" + fileNameWithoutExtension + "_" + id + extension   ; 
-                   
-               Querier runner  = new Querier( commandPath , query , csvDelemiter )                  ;
-                 
-               mapping.initLimitOffsetAndOverrideParams( runner.getColumnsNameAsList(), LIMIT_BATCH_SIZE )  ;
-                    
-                   
-               int totalLinesPerTripleMapping = mapping.getTotalLinesPerTripleMapping() ;
-                    
-               String instanceQuery           = mapping.applyOffset( currentPage ++ )   ;
-                   
-               System.out.println("");
-               System.out.println(" INSTANCE QUERY 0 =========================================");
-               System.out.println(instanceQuery);
-               System.out.println("===========================================================");
-               System.out.println("");
-                   
-               Map<Integer, List<String>>  resulQuery = runner.runCommandQuery( instanceQuery , false ) ;
-          
-               System.out.println("===========================================");
-               System.out.println("["+tripleMapping +"]");
-               System.out.println("===========================================");
-                        
-               System.out.println("===========================================");
-               System.out.println("VARIABLES = " + mapping.getVariablesMapping());
-               System.out.println("===========================================");
-                        
-               System.out.println("===========================================");
-               System.out.println("COLUMN NAMES = " + runner.getColumnsName());
-               System.out.println("===========================================");
-                        
-               Map<Integer, String > variablesName =  
+               Map<Integer, String > variablesName = 
+                       
                        buildVariableNamesByCOlumnIndexColumnName( mapping.getVariablesMapping() , 
                                                                   runner.getColumnsName()       , 
                                                                   id                         )  ;
                          
-               System.out.println("===========================================");
-               System.out.println(" VARIABLE NAMES  = " + variablesName);
-               System.out.println("===========================================");
+               LOGGER.info ( "                                                      " ) ;
+               LOGGER.info ( " ColumnsName      : " + runner.getColumnsName()         ) ;
+               LOGGER.info ( " variablesName    : " + variablesName                   ) ;
+               LOGGER.info ( "                                                      " ) ;
+               
+               mapping.initLimitOffsetAndOverrideParams( runner.getColumnsNameAsList()  , 
+                                                         LIMIT_BATCH_SIZE             ) ;
+                    
+                
+               int totalLinesPerTripleMapping = mapping.getTotalLinesPerTripleMapping() ;
+                    
+               String instanceQuery           = mapping.applyOffset( currentPage ++ )   ;
+                   
+               LOGGER.info ( " InstanceQuery : "  +  instanceQuery  )                   ;
+               LOGGER.info ( "                                                      " ) ;
+                   
+               Map<Integer, List<String>>  resulQuery = runner.runCommandQuery( instanceQuery ,
+                                                                                false       ) ;
                         
                TOTAL_EXTRACTION = applyValuesAndWrite( resulQuery                 , 
                                                        tripleMapping              , 
@@ -161,11 +155,11 @@ public class Processor {
                             
                      instanceQuery = mapping.applyOffset( offset )   ;
  
-                     System.out.println(" INSTANCE QUERY ==========================================");
-                     System.out.println(instanceQuery);
-                     System.out.println("===========================================================");
+                     LOGGER.info ( "                                                " ) ;
+                     LOGGER.info ( " InstanceQuery : "  +  instanceQuery  )             ;
+                     LOGGER.info ( "                                                " ) ;
                            
-                     resulQuery = runner.runCommandQuery( instanceQuery , false ) ;
+                     resulQuery = runner.runCommandQuery( instanceQuery , false )       ;
                             
                      TOTAL_EXTRACTION = applyValuesAndWrite( resulQuery                 , 
                                                              tripleMapping              , 
@@ -179,9 +173,9 @@ public class Processor {
                     }
                }
                     
-               System.out.println( "\n << Total Extacted Triples For Node [ " + 
-                                   id + " ] = "                               + 
-                                   TOTAL_EXTRACTION  + " >> \n "           )  ;
+               LOGGER.info( " << Total Extacted Triples For Node [ " + 
+                              id + " ] = "                           + 
+                              TOTAL_EXTRACTION  + " >> "             )  ;
             }
     }
      
@@ -289,10 +283,9 @@ public class Processor {
                                                  totalExtraction/fragmentFile ) ) ;
             
              InOut.writeTextFile ( out , datasToWrite )  ;
-             datasToWrite.clear()                        ;
+             datasToWrite.clear ()                       ;
         } catch (IOException ex) {
-            Logger.getLogger( ObdaManager.class.getName())
-                                         .log(Level.SEVERE, null, ex )  ;
+            LOGGER.error(ex.getMessage(), ex ) ;
         }
     }
    
@@ -300,8 +293,9 @@ public class Processor {
     
       if ( fragment <= 0 ) {  return outFile ; }
       
-      return outFile.replace( extension, "")   + 
-             "_frag-" + fragment + extension   ;             
+      LOGGER.debug( outFile.replace( extension, "") + "_frag-" + fragment + extension ) ;
+      
+      return  outFile.replace( extension, "") + "_frag-"  +  fragment + extension       ;             
    } 
     
     

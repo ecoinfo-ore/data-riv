@@ -2,6 +2,8 @@
 package datariv.core ;
 
 import java.util.Set ;
+import org.apache.logging.log4j.Logger ;
+import org.apache.logging.log4j.LogManager ;
 import it.unibz.inf.ontop.model.term.Variable ;
 
 /**
@@ -11,12 +13,15 @@ import it.unibz.inf.ontop.model.term.Variable ;
 
 public class Mapping                   {
     
+     
     private final String id            ;
     private final String query         ;
     private final String tripleMapping ;
 
-    private final Set<Variable> variablesMapping    ;
+    private final Set<Variable> variablesMapping ;
 
+    private static final Logger LOGGER = LogManager.getLogger( Mapping.class.getName() ) ;
+    
     public Mapping( String id                       , 
                     String query                    , 
                     String tripleMapping            ,

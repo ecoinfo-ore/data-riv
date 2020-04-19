@@ -1,12 +1,15 @@
 
 package entry ;
 
+import java.io.File ;
 import java.util.Objects ;
-import java.io.IOException ;
-import org.apache.log4j.Level ;
-import datariv.csv.processor.InOut ;
 import datariv.csv.querier.Utils ;
+import datariv.csv.processor.InOut ;
+import java.io.FileNotFoundException ;
+import org.apache.logging.log4j.Level ;
+import org.apache.logging.log4j.Logger ;
 import datariv.csv.processor.Processor ;
+import org.apache.logging.log4j.LogManager ;
 import datariv.owl.ntriple.OwlToNTripleConverter ;
 
 /**
@@ -15,15 +18,17 @@ import datariv.owl.ntriple.OwlToNTripleConverter ;
  */
 
 public class Main {
+
+    private static final Logger LOGGER = LogManager.getLogger(Main.class.getName() ) ;
     
-    public static void main(String[] args) throws IOException, Exception {
-        
+    public static void main(String[] args)     {
+    
         final String EXTENSION      = ".ttl"   ;
         
         String   owl                = null     ;
         String   obda               = null     ;
         String   out                = null     ;
-        String   csvDelemiter       = ";"      ; // Default CSV Separator 
+        String   csvSeparator       = ";"      ; // Default CSV Separator 
         String   overrideKeyInOBDA  = null     ;
         
         Level    level              = null     ;
@@ -36,12 +41,11 @@ public class Main {
        
         boolean  debug              = false    ;
         
-        
         for ( int i = 0 ; i < args.length ; i++ )  {
             
-            String token = args[i]     ;
+            String token = args[i]   ;
            
-            switch ( token ) {
+            switch ( token )         {
                 
               case "-owl"            : owl               = args[i+1]  ;
                                        break ;
@@ -49,7 +53,7 @@ public class Main {
                                        break ;
               case "-out"            : out               = args[i+1]  ;
                                        break ;
-              case "-csv_delemiter"  : csvDelemiter      =  args[i+1] ;
+              case "-csv_separator"  : csvSeparator      =  args[i+1] ;
                                        break ;
               case "-csv_directory"  : overrideKeyInOBDA =  args[i+1] ;
                                        break ;
@@ -67,55 +71,66 @@ public class Main {
                                        break ;
             }
         }
-
-        Objects.requireNonNull( out, "Out Can't BE NULL OR EMPTY ! " ) ;
+ 
+        Objects.requireNonNull ( out, "Out Can't BE NULL OR EMPTY !  "   ) ;
         
         String outPath   = out                      ;
         String fileName  = InOut.getfileName( out ) ;
         String directory = InOut.getFolder(out )    ;
         
         if ( ! InOut.isDirectory( out ) ) {
-          if ( ! fileName.endsWith( EXTENSION ) ) fileName += EXTENSION          ;
-          outPath = directory +  System.getProperty("file.separator") + fileName ; 
+          if ( ! fileName.endsWith( EXTENSION ) ) fileName += EXTENSION    ;
+          outPath = directory +  File.separator + fileName ; 
         } else {
-          directory = outPath.endsWith("/") ? 
+          directory = outPath.endsWith( File.separator ) ? 
                       outPath.substring(0, outPath.length() - 1 )   : 
                       outPath                                       ;
-          if( outPath.endsWith("/")) outPath += "data" + EXTENSION  ;
-          else  outPath  +=  "/data"  +  EXTENSION                  ;
+          if( outPath.endsWith( File.separator ) )
+              outPath += "data" + EXTENSION                         ;
+          else  outPath  +=  File.separator + "data"  +  EXTENSION  ;
         }
 
         /** Convert OWL TO NTriples **/
         
         if ( owl != null ) {
             
-           String ontoNameWithExtension    = InOut.getfileName(owl )                                ;
-           String ontoNameWithoutExtension = InOut.getFileWithoutExtension( ontoNameWithExtension ) ;
-           OwlToNTripleConverter.convert( owl , directory                            + 
-                                                System.getProperty("file.separator") +
-                                                ontoNameWithoutExtension + ".ttl" )  ;
+            try {
+                String ontoNameWithExtension    = InOut.getfileName(owl )                                ;
+                String ontoNameWithoutExtension = InOut.getFileWithoutExtension( ontoNameWithExtension ) ;
+                OwlToNTripleConverter.convert( owl , directory                            +
+                                                     File.separator                       +
+                                                     ontoNameWithoutExtension + ".ttl" )  ;
+            } catch (FileNotFoundException ex) {
+                LOGGER.error("Exception OWL Convertion", ex ) ;
+            }
         }
         
         if( obda != null && ! obda.isEmpty() ) {
             
-            String commandPath = Utils.extractCommandQuery() ;
-
-            Processor.Process( commandPath       ,
-                               obda              ,
-                               csvDelemiter      ,
-                               outPath           ,
-                               limPageSize       ,
-                               fragmentFile      , 
-                               flushCount        ,
-                               parallel          ,
-                               overrideKeyInOBDA ) ;
-
-
-           InOut.rm( commandPath )                 ;
+            try {
+                String commandPath = Utils.extractCommandQuery() ;
+                
+                Processor.Process( commandPath       ,
+                                   obda              ,
+                                   csvSeparator      ,
+                                   outPath           ,
+                                   limPageSize       ,
+                                   fragmentFile      ,
+                                   flushCount        ,
+                                   parallel          ,
+                                   overrideKeyInOBDA ) ;
+                
+                InOut.rm( commandPath ) ;
+                
+            } catch ( Exception ex )    {
+                LOGGER.error( ex.getMessage() , ex )   ;
+            }
            
         } else {
          
-            System.out.print(" \n OBDA PATH CAN'T BE NULL OR EMPTY ! \n " ) ;
+            LOGGER.info("                                    " ) ;
+            LOGGER.info(" OBDA PATH CAN'T BE NULL OR EMPTY ! " ) ;
+            LOGGER.info("                                    " ) ;
         }
     }
     
@@ -124,20 +139,20 @@ public class Main {
         try {
              return  Level.toLevel(level.toUpperCase() ) ;
         } catch( Exception ex )  {
-            System.out.println(" Error : The Level "
-                               + " [" + level +"] deosn't exists."  ) ;
-            System.out.println(" Retained LEVEL : OFF             " ) ;
-            System.out.println("                                  " ) ;
-             return Level.OFF                                         ;
+            LOGGER.warn(" Error : The Level "  +
+                        " [" + level           +
+                        "] deosn't exists."  ) ;
+            LOGGER.info(" Retained LEVEL : OFF       " ) ;
+            return Level.OFF                             ;
         }
     }
     
      private static int validate ( int value ) {
        
         if( value < 0 ) {
-           System.out.println( " Values can't be Negatif !! " ) ;
-           System.out.println( "                            " ) ;
-           System.exit ( 0 )                                    ;
+           LOGGER.error(" Values can't be Negatif !! " ) ;
+           LOGGER.error( "                           " ) ;
+           System.exit ( 0 )                             ;
         }
         return value ;
     }

@@ -1,3 +1,4 @@
+
 package datariv.core ;
 
 import java.util.Set ;
@@ -6,6 +7,8 @@ import java.util.Optional ;
 import java.util.ArrayList ;
 import java.util.Collection ;
 import java.util.stream.Collectors ;
+import org.apache.logging.log4j.Logger ;
+import org.apache.logging.log4j.LogManager ;
 import it.unibz.inf.ontop.model.term.Variable ;
 import it.unibz.inf.ontop.model.type.TermType ;
 import com.google.common.collect.ImmutableList ;
@@ -24,9 +27,11 @@ import it.unibz.inf.ontop.injection.OntopSQLOWLAPIConfiguration ;
 
 public class ObdaManager {
 
-    static final String PATH = "PATH" ;
-     
-    public static List<Mapping> loadOBDA(String obdaFile , String overrideKeyInOBDA ) throws Exception    {
+    static final  String  PATH           = "PATH" ;
+    
+    private static final Logger LOGGER = LogManager.getLogger( ObdaManager.class.getName() ) ;
+    
+    public static List<Mapping> loadOBDA(String obdaFile , String overrideKeyInOBDA ) throws Exception {
        
         OntopSQLOWLAPIConfiguration owlApiConf = OntopSQLOWLAPIConfiguration.defaultBuilder()
                                                                             .nativeOntopMappingFile( obdaFile  )
@@ -35,7 +40,7 @@ public class ObdaManager {
                                                                             .jdbcUser("--")
                                                                             .jdbcPassword("--")
                                                                             .enableTestMode()
-                                                                            .build();
+                                                                            .build() ;
         String abstractKeyInOBDA = overrideKeyInOBDA   ;
         
         if( overrideKeyInOBDA == null || overrideKeyInOBDA.isEmpty() )  {
@@ -150,12 +155,13 @@ public class ObdaManager {
             termType.toString().equalsIgnoreCase("URI"  ))          {
             
             if( ! object.startsWith("<") && ! object.endsWith(">")) {
-                object = "<" + object.split("\\(")[1].split("\\(")[0] + ">"         ;
+               object = "<" + object.split("\\(")[1].split("\\(")[0] + ">"       ;
             }
             
             for ( Variable variable :  variables ) {
                object = object.replaceFirst( "\\{\\}" , 
-                                             "{" + variable.getName().trim() + "}") ; 
+                                             "{" + variable.getName()
+                                                           .trim() + "}" )       ; 
             }
             
         } else {
@@ -179,7 +185,7 @@ public class ObdaManager {
        return object ;
     }
     
-     private static List<Variable> getVariablesMapping(ImmutableList<ImmutableTerm> immutableTerm )  {
+     private static List<Variable> getVariablesMapping(ImmutableList<ImmutableTerm> immutableTerm )      {
      
         List<Variable> variableMapping = new ArrayList<>() ;
         // SUBJECT   : 0
