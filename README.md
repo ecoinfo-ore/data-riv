@@ -11,8 +11,10 @@ Semantic data producer from csvs &amp; databases
     -owl           : Optional - Default : Ignored
   
     -csv_directory : Optional - Default : Ignored
+    
+    -csv_separator : Optional - Default : ";"
 
-    -log_level     : Optional - Default : INFO
+    -log_level     : Optional - Default : WARN
     
     -page_size     : Optional - Default : 10_000 ( QUERY LIMIT )
 
