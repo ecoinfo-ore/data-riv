@@ -80,30 +80,30 @@ public class Main {
         String directory =  InOut.getFolder   ( out ) ;
         
         if ( ! InOut.isDirectory( out ) ) {
-          if ( ! fileName.endsWith( EXTENSION ) ) fileName += EXTENSION    ;
-          outPath = directory +  File.separator + fileName ; 
+          if ( ! fileName.endsWith ( EXTENSION ) ) fileName += EXTENSION   ;
+          outPath = directory  +  File.separator + fileName                ; 
         } else {
           directory = outPath.endsWith( File.separator ) ? 
-                      outPath.substring(0, outPath.length() - 1 )   : 
+                      outPath.substring( 0, outPath.length() - 1 )  : 
                       outPath                                       ;
           if( outPath.endsWith( File.separator ) )
                 outPath  += "data" + EXTENSION                      ;
           else  outPath  +=  File.separator + "data"  +  EXTENSION  ;
         }
 
-        LOGGER.info("                                             " ) ;
-        LOGGER.info("ARG :    "                                     ) ;
-        LOGGER.info(" - OBDA                : " + obda              ) ;
-        LOGGER.info(" - OWL                 : " + owl               ) ;
-        LOGGER.info(" - OUT                 : " + out               ) ;
-        LOGGER.info(" - CSV_Separator       : " + csvSeparator      ) ;
-        LOGGER.info(" - CSV_Directory       : " + overrideKeyInOBDA ) ;
-        LOGGER.info(" - Parallel            : " + parallel          ) ;
-        LOGGER.info(" - Fragment            : " + fragmentFile      ) ;
-        LOGGER.info(" - Page_Size ( LIMIT ) : " + limPageSize       ) ;
-        LOGGER.info(" - FLUSH_COUNT         : " + flushCount        ) ;
-        LOGGER.info(" - LOG_LEVEL           : " + level             ) ;
-        LOGGER.info("                                             " ) ;
+        LOGGER.info( "                                             " ) ;
+        LOGGER.info( "+ Arguments :                                " ) ;
+        LOGGER.info( " - OBDA                : " + obda              ) ;
+        LOGGER.info( " - OWL                 : " + owl               ) ;
+        LOGGER.info( " - OUT                 : " + out               ) ;
+        LOGGER.info( " - CSV_Separator       : " + csvSeparator      ) ;
+        LOGGER.info( " - CSV_Directory       : " + overrideKeyInOBDA ) ;
+        LOGGER.info( " - Parallel            : " + parallel          ) ;
+        LOGGER.info( " - Fragment            : " + fragmentFile      ) ;
+        LOGGER.info( " - Page_Size ( LIMIT ) : " + limPageSize       ) ;
+        LOGGER.info( " - FLUSH_COUNT         : " + flushCount        ) ;
+        LOGGER.info( " - LOG_LEVEL           : " + level             ) ;
+        LOGGER.info( "                                             " ) ;
       
         /** Convert OWL TO NTriples **/
          
