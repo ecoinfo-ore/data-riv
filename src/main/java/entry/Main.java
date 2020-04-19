@@ -3,6 +3,7 @@ package entry ;
 
 import java.io.File ;
 import java.util.Objects ;
+import java.io.IOException ;
 import datariv.csv.querier.Utils ;
 import datariv.csv.processor.InOut ;
 import java.io.FileNotFoundException ;
@@ -109,8 +110,11 @@ public class Main {
         
         if( obda != null && ! obda.isEmpty() ) {
             
+            String commandPath = null          ;
+            
             try {
-                String commandPath = Utils.extractCommandQuery() ;
+                
+                commandPath = Utils.extractCommandQuery() ;
                 
                 Processor.Process( commandPath       ,
                                    obda              ,
@@ -122,17 +126,27 @@ public class Main {
                                    parallel          ,
                                    overrideKeyInOBDA ) ;
                 
-                InOut.rm( commandPath ) ;
                 
-            } catch ( Exception ex )    {
+            } catch ( Exception ex )                   {
+                
                 LOGGER.error( ex.getMessage() , ex )   ;
+                
+            } finally {
+                
+                try {
+                    
+                    if( commandPath != null )
+                    InOut.rm( commandPath ) ;
+                    
+                } catch ( IOException ex )  {
+                    LOGGER.error( ex.getMessage() , ex ) ;
+                }
             }
            
-        } else {
-         
-            LOGGER.info("                                    " ) ;
-            LOGGER.info(" OBDA PATH CAN'T BE NULL OR EMPTY ! " ) ;
-            LOGGER.info("                                    " ) ;
+        } else         {
+           LOGGER.info ("                                    " ) ;
+           LOGGER.info (" OBDA PATH CAN'T BE NULL OR EMPTY ! " ) ;
+           LOGGER.info ("                                    " ) ;
         }
     }
     
