@@ -22,25 +22,25 @@ public class Main {
 
     private static final Logger LOGGER = LogManager.getLogger(Main.class.getName() ) ;
     
-    public static void main(String[] args)     {
+    public static void main(String[] args)       {
     
-        final String EXTENSION      = ".ttl"   ;
+        final String EXTENSION      = ".ttl"     ;
         
-        String   owl                = null     ;
-        String   obda               = null     ;
-        String   out                = null     ;
-        String   csvSeparator       = ";"      ; // Default CSV Separator 
-        String   overrideKeyInOBDA  = null     ;
+        String   owl                = null       ;
+        String   obda               = null       ;
+        String   out                = null       ;
+        String   csvSeparator       = ";"        ; // Default CSV Separator 
+        String   overrideKeyInOBDA  = null       ;
         
-        Level    level              = null     ;
+        Level    level              = Level.INFO ;
       
-        boolean  parallel           = false    ; // Parallel Disabled By Default 
+        boolean  parallel           = false      ; // Parallel Disabled By Default 
         
-        int      fragmentFile       = 0        ; // No Fragmentation File By Default
-        int      limPageSize        = 10_000   ; // DEFAULT LIMIT QUERY = 10_000
-        int      flushCount         = 10_0000  ; // FLUSH EACH 10_0000 Datas in Memory
+        int      fragmentFile       = 0          ; // No Fragmentation File By Default
+        int      limPageSize        = 10_000     ; // DEFAULT LIMIT QUERY = 10_000
+        int      flushCount         = 10_0000    ; // FLUSH EACH 10_0000 Datas in Memory
        
-        boolean  debug              = false    ;
+        boolean  debug              = false      ;
         
         for ( int i = 0 ; i < args.length ; i++ )  {
             
@@ -48,36 +48,36 @@ public class Main {
            
             switch ( token )         {
                 
-              case "-owl"            : owl               = args[i+1]  ;
+              case "-owl"            : owl               = args[i+1] ;
                                        break ;
-              case "-obda"           : obda              = args[i+1]  ;
+              case "-obda"           : obda              = args[i+1] ;
                                        break ;
-              case "-out"            : out               = args[i+1]  ;
+              case "-out"            : out               = args[i+1] ;
                                        break ;
-              case "-csv_separator"  : csvSeparator      =  args[i+1] ;
+              case "-csv_separator"  : csvSeparator      = args[i+1] ;
                                        break ;
-              case "-csv_directory"  : overrideKeyInOBDA =  args[i+1] ;
+              case "-csv_directory"  : overrideKeyInOBDA = args[i+1] ;
                                        break ;
-              case "-par"            : parallel          = true       ;
+              case "-par"            : parallel          = true      ;
                                        break ;
-              case "-debug"          : debug             = true       ;
+              case "-debug"          : debug             = true      ;
                                        break ;
-              case "-fragment"       : fragmentFile      = validate ( Integer.parseInt ( args[i+1] ) ) ;
+              case "-fragment"       : fragmentFile      = validate  ( Integer.parseInt ( args[i+1] ) ) ;
                                        break ;
-              case "-page_size"      : limPageSize       = validate ( Integer.parseInt ( args[i+1] ) ) ;
+              case "-page_size"      : limPageSize       = validate  ( Integer.parseInt ( args[i+1] ) ) ;
                                        break ;
-              case "-fluch_count"    : flushCount        = validate ( Integer.parseInt ( args[i+1] ) ) ;
+              case "-fluch_count"    : flushCount        = validate  ( Integer.parseInt ( args[i+1] ) ) ;
                                        break ;
-              case "-log_level"      : level             = checkLog ( args[i+1] )                      ;
+              case "-log_level"      : level             = checkLog  ( args[i+1] )                      ;
                                        break ;
             }
         }
  
         Objects.requireNonNull ( out, "Out Can't BE NULL OR EMPTY !  "   ) ;
         
-        String outPath   = out                      ;
-        String fileName  = InOut.getfileName( out ) ;
-        String directory = InOut.getFolder(out )    ;
+        String outPath   =  out                       ;
+        String fileName  =  InOut.getfileName ( out ) ;
+        String directory =  InOut.getFolder   ( out ) ;
         
         if ( ! InOut.isDirectory( out ) ) {
           if ( ! fileName.endsWith( EXTENSION ) ) fileName += EXTENSION    ;
@@ -87,17 +87,31 @@ public class Main {
                       outPath.substring(0, outPath.length() - 1 )   : 
                       outPath                                       ;
           if( outPath.endsWith( File.separator ) )
-              outPath += "data" + EXTENSION                         ;
+                outPath  += "data" + EXTENSION                      ;
           else  outPath  +=  File.separator + "data"  +  EXTENSION  ;
         }
 
+        LOGGER.info("                                             " ) ;
+        LOGGER.info("ARG :    "                                     ) ;
+        LOGGER.info(" - OBDA                : " + obda              ) ;
+        LOGGER.info(" - OWL                 : " + owl               ) ;
+        LOGGER.info(" - OUT                 : " + out               ) ;
+        LOGGER.info(" - CSV_Separator       : " + csvSeparator      ) ;
+        LOGGER.info(" - CSV_Directory       : " + overrideKeyInOBDA ) ;
+        LOGGER.info(" - Parallel            : " + parallel          ) ;
+        LOGGER.info(" - Fragment            : " + fragmentFile      ) ;
+        LOGGER.info(" - Page_Size ( LIMIT ) : " + limPageSize       ) ;
+        LOGGER.info(" - FLUSH_COUNT         : " + flushCount        ) ;
+        LOGGER.info(" - LOG_LEVEL           : " + level             ) ;
+        LOGGER.info("                                             " ) ;
+      
         /** Convert OWL TO NTriples **/
-        
+         
         if ( owl != null ) {
             
             try {
                 
-                LOGGER.info("OWL Conversion... " )                                                       ;
+                LOGGER.info("OWL Conversion... "                                                       ) ;
                 String ontoNameWithExtension    = InOut.getfileName(owl )                                ;
                 String ontoNameWithoutExtension = InOut.getFileWithoutExtension( ontoNameWithExtension ) ;
                 OwlToNTriplesConverter.convert( owl , directory                            +
