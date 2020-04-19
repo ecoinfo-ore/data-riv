@@ -37,7 +37,7 @@ public class OwlToNTripleConverter {
       
       model.write( fop , "NT" ) ;
     
-      LOGGER.info(" DONE !  " ) ;
+      LOGGER.info( "DONE !  " ) ;
       
     }
 }
