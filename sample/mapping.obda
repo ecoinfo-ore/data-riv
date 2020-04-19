@@ -16,5 +16,4 @@ mappingId	(1)
 target		:sample/measurement/variable/localName/{recording_group_id}/{session_id} a oboe-core:Measurement ; oboe-core:ofCharacteristic oboe-core:Name ; oboe-core:usesStandard :NamingStandard ; oboe-core:hasValue {created_ts}^^xsd:string , {session_id}^^xsd:integer . 
 source		SELECT  * FROM @PATH/sample/data.csv data ; 
 
-
 ]]
