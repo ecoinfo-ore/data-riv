@@ -1,5 +1,5 @@
 
-package datariv.core ;
+package dataRiv.core ;
 
 import java.util.Set ;
 import org.apache.logging.log4j.Logger ;

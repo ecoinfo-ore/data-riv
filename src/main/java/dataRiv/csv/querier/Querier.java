@@ -1,5 +1,5 @@
 
-package datariv.csv.querier ;
+package dataRiv.csv.querier ;
 
 import java.util.Map ;
 import java.util.List ;
@@ -13,10 +13,10 @@ import org.apache.logging.log4j.LogManager ;
 import org.apache.commons.exec.CommandLine ;
 import org.apache.commons.exec.DefaultExecutor ;
 import org.apache.commons.exec.PumpStreamHandler ;
-import static datariv.csv.querier.Utils.getExecutor ;
-import static datariv.csv.querier.Utils.buildCommandLine ;
+import static dataRiv.csv.querier.Utils.getExecutor ;
+import static dataRiv.csv.querier.Utils.buildCommandLine ;
 import org.apache.commons.exec.DefaultExecuteResultHandler ;
-import static datariv.csv.querier.Utils.applyLimitOffsetParams ;
+import static dataRiv.csv.querier.Utils.applyLimitOffsetParams ;
 
 /**
  *

@@ -1,5 +1,5 @@
 
-package datariv.owl.ntriple ;
+package dataRiv.owl.ntriples ;
 
 /**
  *
@@ -15,9 +15,9 @@ import org.apache.logging.log4j.LogManager ;
 import org.apache.jena.ontology.OntModelSpec ;
 import org.apache.jena.rdf.model.ModelFactory ;
 
-public class OwlToNTripleConverter {
+public class OwlToNTriplesConverter {
 
-    final  static Logger LOGGER  = LogManager.getLogger( OwlToNTripleConverter.class.getName()) ;
+    final  static Logger LOGGER  = LogManager.getLogger( OwlToNTriplesConverter.class.getName( )) ;
   
     public static void convert( String owlPath, String outPathFile ) throws FileNotFoundException {
         

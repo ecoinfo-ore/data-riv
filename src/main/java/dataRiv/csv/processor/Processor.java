@@ -1,5 +1,5 @@
 
-package datariv.csv.processor ;
+package dataRiv.csv.processor ;
 
 import java.util.Map ;
 import java.util.Set ;
@@ -7,14 +7,14 @@ import java.util.List ;
 import java.util.HashMap ;
 import java.io.IOException ;
 import java.util.ArrayList ;
-import datariv.core.Mapping ;
-import datariv.csv.querier.Utils ;
-import datariv.csv.querier.Querier ;
+import dataRiv.core.Mapping ;
+import dataRiv.csv.querier.Utils ;
+import dataRiv.csv.querier.Querier ;
 import java.util.stream.Collectors ;
 import org.apache.logging.log4j.Logger ;
 import org.apache.logging.log4j.LogManager ;
 import it.unibz.inf.ontop.model.term.Variable ;
-import static datariv.core.ObdaManager.loadOBDA ;
+import static dataRiv.core.ObdaManager.loadOBDA ;
 
 /**
  *

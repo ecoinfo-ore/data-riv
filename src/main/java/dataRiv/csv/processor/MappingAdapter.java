@@ -1,9 +1,9 @@
 
-package datariv.csv.processor ;
+package dataRiv.csv.processor ;
 
 import java.util.Set ;
 import java.util.List ;
-import datariv.core.Mapping ;
+import dataRiv.core.Mapping ;
 import java.util.regex.Matcher ;
 import java.util.regex.Pattern ;
 import org.apache.logging.log4j.Logger ;

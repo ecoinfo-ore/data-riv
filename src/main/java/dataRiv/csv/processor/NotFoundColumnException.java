@@ -1,5 +1,5 @@
 
-package datariv.csv.processor ;
+package dataRiv.csv.processor ;
 
 import java.util.Collection ;
 

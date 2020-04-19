@@ -4,14 +4,14 @@ package entry ;
 import java.io.File ;
 import java.util.Objects ;
 import java.io.IOException ;
-import datariv.csv.querier.Utils ;
-import datariv.csv.processor.InOut ;
+import dataRiv.csv.querier.Utils ;
+import dataRiv.csv.processor.InOut ;
 import java.io.FileNotFoundException ;
 import org.apache.logging.log4j.Level ;
 import org.apache.logging.log4j.Logger ;
-import datariv.csv.processor.Processor ;
+import dataRiv.csv.processor.Processor ;
 import org.apache.logging.log4j.LogManager ;
-import datariv.owl.ntriple.OwlToNTripleConverter ;
+import dataRiv.owl.ntriples.OwlToNTriplesConverter ;
 
 /**
  *
@@ -100,9 +100,9 @@ public class Main {
                 LOGGER.info("OWL Convertion.. " )                                                        ;
                 String ontoNameWithExtension    = InOut.getfileName(owl )                                ;
                 String ontoNameWithoutExtension = InOut.getFileWithoutExtension( ontoNameWithExtension ) ;
-                OwlToNTripleConverter.convert( owl , directory                            +
-                                                     File.separator                       +
-                                                     ontoNameWithoutExtension + ".ttl" )  ;
+                OwlToNTriplesConverter.convert( owl , directory                            +
+                                                      File.separator                       +
+                                                      ontoNameWithoutExtension + ".ttl" )  ;
             } catch (FileNotFoundException ex) {
                 LOGGER.error("Exception OWL Convertion", ex ) ;
             }

@@ -1,5 +1,5 @@
 
-package datariv.csv.querier ;
+package dataRiv.csv.querier ;
 
 import java.io.File ;
 import java.util.Map ;
