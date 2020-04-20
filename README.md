@@ -20,13 +20,13 @@ Semantic data producer from csvs &amp; databases
 
 #### Args :
 
-    -obda          : Optional - Default : Ignored
+    -obda          : Optional - Default : Null
 
-    -out           : Optional - Default : Ignored
+    -out           : Optional - Default : Null
     
-    -owl           : Optional - Default : Ignored
+    -owl           : Optional - Default : Null
   
-    -csv_directory : Optional - Default : Ignored
+    -csv_directory : Optional - Default : Null
     
     -csv_separator : Optional - Default : ";"
 
