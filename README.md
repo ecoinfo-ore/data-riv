@@ -42,3 +42,6 @@ Semantic data producer from csvs &amp; databases
 
     -debug         : Optional - Default : Boolean Disable
  
+#### Included Projects : 
+ 	
+  - [Q - Text as Data](http://harelba.github.io/q/) : Command line tool that allows direct execution of SQL-like queries on CSVs/TSVs 
