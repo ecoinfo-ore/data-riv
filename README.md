@@ -2,6 +2,22 @@
 
 Semantic data producer from csvs &amp; databases 
 
+
+#### Build :
+
+```
+   mvn clean install assembly:single 
+```
+
+#### Command Exp : 
+
+```
+    java -jar  target/dataRiv-1.0-jar-with-dependencies.jar \
+         -owl  "/home/user/sample/ontology.owl"             \
+         -obda "/home/user/sample/mapping.obda"             \
+         -out  "/home/user/sample/out/data.ttl"
+```
+
 #### Args :
 
     -obda          : Optional - Default : Ignored
@@ -26,12 +42,3 @@ Semantic data producer from csvs &amp; databases
 
     -debug         : Optional - Default : Boolean Disable
  
-
-## Command Exp : 
-
-```
-    java -jar  target/dataRiv-1.0-jar-with-dependencies.jar \
-         -owl  "/home/ryahiaoui/sample/ontology.owl"        \
-         -obda "/home/ryahiaoui/sample/mapping.obda"        \
-         -out  "/home/ryahiaoui/sample/out/data.ttl"
-```
