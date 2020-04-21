@@ -107,9 +107,12 @@ public class ObdaManager {
         
        ImmutableTerm term    =  immutableTerm.get( 0 )                                  ;
         
-       String        subject =  term.simplify().toString()                              ;
+       String        subject       =  term.simplify().toString()                        ;
        
-       if ( ! subject.startsWith("<") && ! subject.endsWith(">") )                      {
+       boolean       wrappedSubjet =  subject.startsWith("<") &&
+                                      subject.endsWith(">")                             ;
+       
+       if ( ! wrappedSubjet )  {
              subject = subject.split("\\(")[1].split("\\(")[0]                          ;
        }
 
@@ -120,7 +123,7 @@ public class ObdaManager {
                                           "{"      + variable.getName().trim() + "}")  ; 
        }
         
-       return "<" + subject +  ">" ;
+       return  wrappedSubjet ? subject : "<" + subject +  ">" ;
     }
 
     private static String getPredicate(ImmutableList<ImmutableTerm> immutableTerm )    {
